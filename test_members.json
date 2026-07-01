@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Ahmed",
+    "monthly_income": 8000,
+    "payment_history": ["on_time", "on_time", "late_3_days", "on_time"],
+    "months_in_circle_before": 6
+  },
+  {
+    "name": "Sara",
+    "monthly_income": 12000,
+    "payment_history": ["on_time", "on_time", "on_time", "on_time"],
+    "months_in_circle_before": 12
+  },
+  {
+    "name": "Faisal",
+    "monthly_income": 5000,
+    "payment_history": ["late_5_days", "missed", "late_3_days", "on_time"],
+    "months_in_circle_before": 2
+  },
+  {
+    "name": "Noura",
+    "monthly_income": 15000,
+    "payment_history": ["on_time", "on_time", "on_time", "on_time", "on_time", "on_time"],
+    "months_in_circle_before": 24
+  },
+  {
+    "name": "Khalid",
+    "monthly_income": 3000,
+    "payment_history": ["missed", "missed", "late_10_days"],
+    "months_in_circle_before": 1
+  },
+  {
+    "name": "Lama",
+    "monthly_income": 9000,
+    "payment_history": ["on_time", "late_2_days", "on_time", "on_time", "on_time"],
+    "months_in_circle_before": 8
+  },
+  {
+    "name": "Abdullah",
+    "monthly_income": 4500,
+    "payment_history": ["missed", "on_time", "on_time", "missed", "late_7_days"],
+    "months_in_circle_before": 4
+  },
+  {
+    "name": "Reem",
+    "monthly_income": 20000,
+    "payment_history": ["on_time"],
+    "months_in_circle_before": 0
+  }
+]

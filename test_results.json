@@ -1,0 +1,86 @@
+[
+  {
+    "timestamp": "2026-06-30T19:11:34",
+    "member": {
+      "group": [
+        {
+          "name": "Ahmed",
+          "salary_date": 25,
+          "financial_goal": "buying a laptop, needs money soon"
+        },
+        {
+          "name": "Sara",
+          "salary_date": 1,
+          "financial_goal": "stable savings, no urgent need"
+        },
+        {
+          "name": "Faisal",
+          "salary_date": 27,
+          "financial_goal": "wedding expenses in 3 months"
+        }
+      ]
+    },
+    "result": {
+      "handled_by": "turn_agent",
+      "result": {
+        "turn_order": [
+          {
+            "month": 1,
+            "name": "Ahmed",
+            "reason": "الاحتياج الملح"
+          },
+          {
+            "month": 2,
+            "name": "Faisal",
+            "reason": "مصاريف الزفاف القادمة"
+          },
+          {
+            "month": 3,
+            "name": "Sara",
+            "reason": "استقرار الادخار"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "timestamp": "2026-06-30T19:11:42",
+    "member": {
+      "pooled_amount": 4000,
+      "months_idle": 3
+    },
+    "result": {
+      "handled_by": "yield_agent",
+      "result": {
+        "yield_earned": 30.0,
+        "new_total": 4030.0,
+        "explanation": "كسبنا 30 ريال من العائد على الأموال المتجمعة خلال 3 أشهر"
+      }
+    }
+  },
+  {
+    "timestamp": "2026-06-30T19:11:51",
+    "member": {
+      "name": "Ahmed",
+      "months_in_circle_before": 6,
+      "payment_history": [
+        "on_time",
+        "on_time",
+        "missed"
+      ],
+      "amount_due": 500
+    },
+    "result": {
+      "handled_by": "mediator_agent",
+      "result": {
+        "message_to_member": "السلام عليكم أحمد، نحن ن理解 أن التأخير في السداد قد يحدث لأي شخص، ولكننا نود أن نساعدك في العودة إلى جدول الدفع. يرجى النظر في الخيارات التالية:",
+        "restructuring_options": [
+          "دفع المبلغ الكامل في غضون أسبوعين",
+          "دفع نصف المبلغ في غضون أسبوع و النصف الباقي في غضون شهر",
+          "دفع المبلغ على ثلاثة أقساط متساوية في الأشهر الثلاثة القادمة"
+        ],
+        "draft_contract_note": "سيتم تحديث اتفاقية الدفع لتشمل جدولًا زمنيًا محدثًا لسداد المبلغ البالغ 500، و سيتم إرسال الإيصال بعد إتمام الدفع"
+      }
+    }
+  }
+]
