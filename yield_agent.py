@@ -1,6 +1,9 @@
 import os
 import json
+from typing import Optional
 from groq import Groq
+
+from memory import JamiyaMemory
 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
@@ -8,7 +11,7 @@ client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 ANNUAL_YIELD_RATE = 0.03  # 3% annual, mocked
 
 
-def calculate_yield(pooled_amount: float, months_idle: int) -> dict:
+def calculate_yield(pooled_amount: float, months_idle: int, memory: Optional[JamiyaMemory] = None) -> dict:
     """
     pooled_amount: total SAR sitting idle in the circle right now
     months_idle: how many months this money has been waiting for payout
@@ -16,6 +19,10 @@ def calculate_yield(pooled_amount: float, months_idle: int) -> dict:
     This is mostly real math (no LLM needed for the number itself),
     but we ask the LLM to generate a friendly Arabic explanation,
     matching the pattern of the other agents.
+
+    memory: optional JamiyaMemory. Updates the circle's running pool
+    total and logs each yield event so the circle has an auditable
+    history of how the pooled money has grown over time.
     """
     monthly_rate = ANNUAL_YIELD_RATE / 12
     earned_yield = pooled_amount * monthly_rate * months_idle
@@ -53,9 +60,16 @@ Respond ONLY with valid JSON in this exact format, nothing else:
     raw = response.choices[0].message.content.strip()
     raw = raw.replace("```json", "").replace("```", "").strip()
 
-    return json.loads(raw)
+    result = json.loads(raw)
+
+    if memory:
+        memory.update_circle_pool(new_total, 0)  # pool resets idle-clock once paid out/reinvested
+        memory.log_yield(result.get("yield_earned", earned_yield), result.get("new_total", new_total))
+
+    return result
 
 
 if __name__ == "__main__":
-    result = calculate_yield(pooled_amount=4000, months_idle=3)
+    mem = JamiyaMemory(path="jamiya_memory.demo.json")
+    result = calculate_yield(pooled_amount=4000, months_idle=3, memory=mem)
     print(json.dumps(result, ensure_ascii=False, indent=2))

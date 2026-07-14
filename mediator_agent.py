@@ -1,11 +1,15 @@
 import os
 import json
+import re
+from typing import Optional
 from groq import Groq
+
+from memory import JamiyaMemory
 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 
-def mediate_missed_payment(member_data: dict) -> dict:
+def mediate_missed_payment(member_data: dict, memory: Optional[JamiyaMemory] = None) -> dict:
     """
     member_data: dict like:
     {
@@ -16,22 +20,41 @@ def mediate_missed_payment(member_data: dict) -> dict:
     }
     Returns a private Arabic message + 2-3 restructuring options + a draft
     contract note, matching what the Mediator Agent does in the proposal.
+
+    memory: optional JamiyaMemory. When given, the agent is told how many
+    times this member has missed a payment and been mediated with before,
+    all-time -- so a first-time miss gets a gentler tone than a repeat
+    pattern, and it logs this event and this member's missed payment for
+    future agents (e.g. the Risk Agent) to see.
     """
+    name = member_data.get("name", "unknown")
+    history_context = memory.get_member_context(name) if memory else None
+
     system_prompt = (
         "You are the Mediator Agent for a Saudi jamiya (rotating savings circle). "
         "When a member misses a payment, you privately and respectfully reach out "
         "to them in Arabic, propose 2-3 fair restructuring options, and draft a "
         "short note describing the agreement once they choose. Be gentle but clear, "
-        "and consider their payment history when deciding the tone. "
+        "and consider their payment history when deciding the tone -- a first-time "
+        "miss should read more understanding, a repeat pattern should be clear and "
+        "firmer while remaining respectful. "
         "CRITICAL: You must respond ONLY in Arabic. Do NOT use any Chinese, Japanese, "
         "Korean, or any non-Arabic characters. Every single word must be in Arabic only."
     )
 
-    user_prompt = f"""Member who missed a payment:
+    user_prompt = f"""Member who missed a payment (this event):
 {json.dumps(member_data, ensure_ascii=False, indent=2)}
+"""
+    if history_context:
+        user_prompt += f"""
+Member's history across the circle so far (all-time missed payment count
+and past mediations -- use this to calibrate tone):
+{json.dumps(history_context, ensure_ascii=False, indent=2)}
+"""
 
+    user_prompt += """
 Respond ONLY with valid JSON in this exact format, nothing else:
-{{
+{
   "message_to_member": "private Arabic message, gentle but clear",
   "restructuring_options": [
     "option 1 in Arabic",
@@ -39,7 +62,7 @@ Respond ONLY with valid JSON in this exact format, nothing else:
     "option 3 in Arabic"
   ],
   "draft_contract_note": "short Arabic note describing what the new agreement will cover, to be finalized once member picks an option"
-}}
+}
 """
 
     response = client.chat.completions.create(
@@ -55,10 +78,15 @@ Respond ONLY with valid JSON in this exact format, nothing else:
     raw = raw.replace("```json", "").replace("```", "").strip()
 
     # Remove any stray non-Arabic/non-Latin characters (e.g. Chinese glyphs)
-    import re
     raw = re.sub(r'[^\u0000-\u007F\u0600-\u06FF\u0750-\u077F\s\d\{\}\[\]\"\'\:\,\.\!\?\-\_\(\)]', '', raw)
 
-    return json.loads(raw)
+    result = json.loads(raw)
+
+    if memory:
+        memory.log_payment_event(name, "missed")
+        memory.log_mediation(name, result.get("restructuring_options", []), result.get("draft_contract_note"))
+
+    return result
 
 
 if __name__ == "__main__":
@@ -66,8 +94,9 @@ if __name__ == "__main__":
         "name": "Ahmed",
         "months_in_circle_before": 6,
         "payment_history": ["on_time", "on_time", "missed"],
-        "amount_due": 500
+        "amount_due": 500,
     }
 
-    result = mediate_missed_payment(test_member)
+    mem = JamiyaMemory(path="jamiya_memory.demo.json")
+    result = mediate_missed_payment(test_member, memory=mem)
     print(json.dumps(result, ensure_ascii=False, indent=2))
