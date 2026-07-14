@@ -10,7 +10,7 @@
 // ═══════════════════════════════════════════════════════════
 var state = {
   phase:'language', lang:'ar', tab:'circles',
-  activeCircleId:null, payMode:'off', notifView:false, loginPhone:'', loginNationalId:'', loginUsername:'', createStep:1,
+  activeCircleId:null, payMode:'off', contractView:'off', notifView:false, loginPhone:'', loginNationalId:'', loginUsername:'', createStep:1,
   settings:{lang:'ar',textSize:'normal',notifPayment:true,notifGroup:true}
 };
 function setState(u){
@@ -42,9 +42,9 @@ function callAgent(payload,onDone){
 
 // Shared Risk Agent hook used by both the Create-Circle member form and the
 // "Add Member Before Start" form on the circle detail screen.
-function runRiskAgentCheck(name,seedRisk,targetElId){
+function runRiskAgentCheck(name,seedRisk,targetElId,circleId){
   var l=tt();
-  el(targetElId).innerHTML='<p class="ts cm">'+l.riskAgentLoading+'</p>';
+  el(targetElId).innerHTML=skeletonHtml(2);
   var payload={event_type:'new_member',member_data:{
     name:name||'Member',
     monthly_income:seedRisk?(seedRisk.level==='red'?3000:6000):8000,
@@ -52,12 +52,14 @@ function runRiskAgentCheck(name,seedRisk,targetElId){
     months_in_circle_before:seedRisk?1:6
   }};
   callAgent(payload,function(result,err){
-    if(err){el(targetElId).innerHTML='<p class="ts cr">'+l.agentErrorPrefix+err+'</p>';return;}
+    if(err){console.error('Risk Agent error:',err);setHtml(targetElId,aiCardShell('risk','<p class="ts cr" style="display:flex;align-items:center;gap:6px">'+icon('alert',15)+' '+l.aiServiceDown+'</p>',false));return;}
     var risk=(result&&result.result)||{};
-    var lvl=risk.risk_level,isR=lvl==='red',isY=lvl==='yellow';
-    var bgVar=isR?'var(--red-bg)':(isY?'var(--yellow-bg)':'var(--green-bg)');
-    var colorVar=isR?'var(--red)':(isY?'var(--yellow)':'var(--green)');
-    el(targetElId).innerHTML='<div class="rsk" style="background:'+bgVar+';border:1.5px solid '+colorVar+'"><div style="font-size:22px;flex-shrink:0">🤖</div><div style="flex:1"><p class="tm b8" style="margin-bottom:4px;color:'+colorVar+'">'+l.riskAgentTitle+'</p><p class="ts ct">'+(risk.reason||'')+'</p></div></div>';
+    var lvl=risk.risk_level,isR=lvl==='red',isY=lvl==='yellow',cls=isR?'rd':(isY?'yl':'gr');
+    var verdictTxt=isR?l.riskRedTitle:(isY?l.riskYellowTitle:l.riskGreenTitle);
+    var inner='<div class="ai-verdict '+cls+'">'+verdictTxt+'</div><p class="ts ct">'+(risk.reason||'')+'</p>';
+    if(!setHtml(targetElId,aiCardShell('risk',inner,true)))return;
+    bindReviewLinks();
+    if(circleId)addActivity(circleId,'risk',T.ar.actRiskAssessed(name||'—'),T.en.actRiskAssessed(name||'—'));
   });
 }
 
@@ -84,8 +86,8 @@ ar:{
   statusActive:'نشطة',statusWaiting:'بانتظار التأكيد',
   monthlyUnit:'ريال/شهر',myTurnIn:'دوري في',
   daysLeftLabel:function(n){return n+' يوم للدفع'},
-  confirmedOf:function(n,t){return n+'/'+t+' أكدوا'},
-  backBtn:'← الجمعيات',nextPayment:'الدفع القادم',daysUnit:'يوم',
+  confirmedOf:function(n,t){return n+'/'+t},
+  backBtn:'الجمعيات',nextPayment:'الدفع القادم',daysUnit:'يوم',
   currentTurn:'الدور الحالي',
   turnOf:function(n,t){return 'الدور '+n+' من '+t},
   potLabel:'المبلغ هذا الشهر',myTurnLabel:'دوري',
@@ -111,8 +113,9 @@ ar:{
   errMinMembers:'يجب إضافة عضوين على الأقل',
   successTitle:'تم إنشاء الجمعية! 🎉',
   successSub:'ستصل الدعوات للأعضاء قريباً',goHome:'العودة للجمعيات',
-  riskRedTitle:'⚠️ تحذير — عضو عالي المخاطر',
-  riskYellowTitle:'⚡ تنبيه — يُنصح بالحذر',
+  riskRedTitle:'تحذير — عضو عالي المخاطر',
+  riskYellowTitle:'تنبيه — يُنصح بالحذر',
+  riskGreenTitle:'مخاطر منخفضة — موثوق',
   riskReason:'السبب',riskHistory:'السجل',
   settingsTitle:'الإعدادات',appearanceSection:'المظهر',
   languageLabel:'اللغة',textSizeLabel:'حجم الخط',
@@ -121,7 +124,7 @@ ar:{
   notifSection:'الإشعارات',notifPayment:'تذكير الدفع',
   notifGroup:'تحديثات المجموعة',profileSection:'الملف الشخصي',
   nameLabel:'الاسم',phoneLabel2:'رقم الجوال',versionLabel:'الإصدار',
-  logoutBtn:'🚪  تسجيل الخروج',nameVal:'وئام',
+  logoutBtn:'تسجيل الخروج',nameVal:'وئام',
   // New
   waitingTitle:'الجمعية لم تبدأ بعد',
   waitingDesc:'لا يمكن بدء الجمعية حتى يؤكد جميع الأعضاء انضمامهم.',
@@ -150,7 +153,7 @@ ar:{
   editPriceBtn:'تعديل',savePriceBtn:'حفظ',cancelBtn:'إلغاء',
   newPriceLabel:'السعر الجديد (ريال)',
   errPrice:'يرجى إدخال مبلغ صحيح',
-  priceUpdatedMsg:'✅ تم تحديث السعر وإشعار جميع الأعضاء',
+  priceUpdatedMsg:'تم تحديث السعر وإشعار جميع الأعضاء',
   deleteCircleBtn:'حذف الجمعية',
   deleteConfirmTitle:'هل أنت متأكد؟',
   deleteConfirmDesc:'سيتم حذف هذه الجمعية نهائياً ولا يمكن التراجع عن هذا الإجراء.',
@@ -158,20 +161,52 @@ ar:{
   priceChangeNotif:function(nm,oldA,newA){return 'تم تغيير سعر جمعية «'+nm+'» من '+oldA+' إلى '+newA+' ريال شهرياً.'},
   circleDeletedNotif:function(nm){return 'تم حذف جمعية «'+nm+'».'},
   notificationsTitle:'الإشعارات',noNotifications:'لا توجد إشعارات بعد',
-  askRiskAgent:'🤖 اسأل وكيل المخاطر الذكي',
+  askRiskAgent:'اسأل وكيل المخاطر الذكي',
   riskAgentLoading:'جاري تحليل البيانات عبر الوكيل الذكي (Groq)...',
   riskAgentTitle:'تقييم الوكيل الذكي',
-  mediateBtn:'🤝 توسّط الوكيل الذكي',
+  mediateBtn:'توسّط الوكيل الذكي',
   mediateLoading:'جاري صياغة الحل عبر الوكيل الذكي...',
   mediateMsgTitle:'رسالة الوكيل للعضو',
   restructOptionsTitle:'خيارات إعادة الجدولة',
   draftContractTitle:'مسودة الاتفاق',
   yieldCardTitle:'العائد على المبلغ المجمّع',
   yieldDesc:'احسب العائد المتوقع لاستثمار المبلغ الخامل عبر صندوق سوق نقدي متوافق مع الشريعة (الوكيل الذكي).',
-  yieldBtn:'💰 احسب العائد',
+  yieldBtn:'احسب العائد',
   yieldLoading:'جاري حساب العائد عبر الوكيل الذكي...',
   yieldEarnedLabel:'العائد المكتسب',yieldNewTotalLabel:'الإجمالي الجديد',
   agentErrorPrefix:'⚠️ ',
+  valueProp1:'فحص مخاطر الأعضاء بالذكاء الاصطناعي',valueProp2:'ترتيب دور عادل تلقائياً',valueProp3:'عائد شرعي على المبلغ المجمّع',
+  nafathExplain:'نتحقق من هويتك عبر نفاذ لحماية جميع أعضاء الجمعية من الاحتيال.',
+  privacyNote:'بياناتك مشفّرة ولن تُستخدم إلا لأغراض التحقق من الهوية.',
+  otpPrivacy:'لن نطلب منك مشاركة هذا الرمز مع أي شخص، حتى لو ادّعى أنه من الدعم.',
+  salaryDateLabel:'تاريخ الراتب',financialGoalLabel:'الهدف المالي',
+  goalPH:'مثال: أحتاج المبلغ لشراء سيارة',
+  aiOptToggle:'تحسين الترتيب بالذكاء الاصطناعي (اختياري)',
+  suggestOrderBtn:'اقترح ترتيباً عادلاً بالذكاء الاصطناعي',
+  suggestOrderLoading:'الوكيل الذكي يحلل رواتب وأهداف الأعضاء...',
+  turnReasonsTitle:'أسباب الترتيب المقترح',
+  applyOrderBtn:'تطبيق هذا الترتيب',
+  orderAppliedMsg:'تم تطبيق الترتيب المقترح',
+  subtotalLabel:'اشتراكك هذا الشهر',queuePosLabel:'ترتيبك في الدور',totalPotLabel:'إجمالي الجمعية',
+  contractTitle:'العقد الرقمي',
+  contractDesc:'قبل بدء الجمعية، راجع ملخص الاتفاق الذي سيوقّعه جميع الأعضاء رقمياً عبر نفاذ.',
+  contractMembers:'عدد الأعضاء',contractAmount:'المبلغ الشهري',contractOrder:'ترتيب الاستلام',
+  contractPolicy:'سياسة النزاعات',contractPolicyVal:'وساطة تلقائية عبر الوكيل الذكي عند التأخر في الدفع',
+  signContractBtn:'التوقيع عبر نفاذ وبدء الجمعية',
+  contractSignedMsg:'موقّع رقمياً عبر نفاذ',
+  alinmaBadge:'بالشراكة مع مصرف الإنماء',shariahBadge:'متوافق مع الشريعة',
+  trustRiskTitle:'الثقة والمخاطر',
+  trustRiskDesc:'هذه التقييمات خاصة بك كمنظّم ولا تظهر لبقية الأعضاء. يمكن لأي عضو طلب مراجعة بشرية للقرار.',
+  noFlagged:'لا يوجد أعضاء عليهم تنبيه حالياً',
+  aiServiceDown:'تعذّر الوصول إلى خدمة الوكلاء الذكية حالياً. حاول مرة أخرى بعد قليل.',
+  reqReviewBtn:'الإبلاغ عن خطأ / طلب مراجعة بشرية',
+  reqReviewSent:'تم إرسال طلبك. سيراجع فريق الدعم القرار خلال ٢٤ ساعة.',
+  activityTitle:'نشاط الوكيل الذكي',
+  actRiskAssessed:function(n){return 'وكيل المخاطر قيّم انضمام '+n},
+  actMediated:function(n){return 'وكيل الوساطة تواصل مع '+n},
+  actYield:'وكيل العائد حسب العائد المتوقع على المبلغ المجمّع',
+  actTurn:'وكيل الترتيب اقترح ترتيب استلام جديد',
+  receiptDateLabel:'التاريخ',receiptMethodLabel:'طريقة الدفع',
 },
 en:{
   appName:'JameyaTech',appSub:'جمعيتك',
@@ -192,8 +227,8 @@ en:{
   statusActive:'Active',statusWaiting:'Awaiting Confirmation',
   monthlyUnit:'SAR/month',myTurnIn:'My turn in',
   daysLeftLabel:function(n){return n+' days to pay'},
-  confirmedOf:function(n,t){return n+'/'+t+' confirmed'},
-  backBtn:'← Circles',nextPayment:'Next Payment',daysUnit:'Days',
+  confirmedOf:function(n,t){return n+'/'+t},
+  backBtn:'Circles',nextPayment:'Next Payment',daysUnit:'Days',
   currentTurn:'Current Turn',
   turnOf:function(n,t){return 'Turn '+n+' of '+t},
   potLabel:'Pot this month',myTurnLabel:'My Turn',
@@ -219,8 +254,9 @@ en:{
   errMinMembers:'Please add at least 2 members',
   successTitle:'Circle Created! 🎉',
   successSub:'Invitations will be sent to all members',goHome:'Go to My Circles',
-  riskRedTitle:'⚠️ Warning — High Risk Member',
-  riskYellowTitle:'⚡ Caution — Proceed Carefully',
+  riskRedTitle:'Warning — High Risk Member',
+  riskYellowTitle:'Caution — Proceed Carefully',
+  riskGreenTitle:'Low Risk — Trusted',
   riskReason:'Reason',riskHistory:'History',
   settingsTitle:'Settings',appearanceSection:'Appearance',
   languageLabel:'Language',textSizeLabel:'Text Size',
@@ -229,7 +265,7 @@ en:{
   notifSection:'Notifications',notifPayment:'Payment reminders',
   notifGroup:'Group updates',profileSection:'My Profile',
   nameLabel:'Name',phoneLabel2:'Phone',versionLabel:'App Version',
-  logoutBtn:'🚪  Sign Out',nameVal:'Abdullah',
+  logoutBtn:'Sign Out',nameVal:'Abdullah',
   // New
   waitingTitle:'Circle Has Not Started',
   waitingDesc:'The circle cannot start until every member confirms.',
@@ -258,7 +294,7 @@ en:{
   editPriceBtn:'Edit',savePriceBtn:'Save',cancelBtn:'Cancel',
   newPriceLabel:'New Price (SAR)',
   errPrice:'Please enter a valid amount',
-  priceUpdatedMsg:'✅ Price updated and all members notified',
+  priceUpdatedMsg:'Price updated and all members notified',
   deleteCircleBtn:'Delete Circle',
   deleteConfirmTitle:'Are you sure?',
   deleteConfirmDesc:'This circle will be permanently deleted. This action cannot be undone.',
@@ -266,20 +302,52 @@ en:{
   priceChangeNotif:function(nm,oldA,newA){return 'The monthly price for "'+nm+'" changed from '+oldA+' to '+newA+' SAR.'},
   circleDeletedNotif:function(nm){return '"'+nm+'" circle has been deleted.'},
   notificationsTitle:'Notifications',noNotifications:'No notifications yet',
-  askRiskAgent:'🤖 Ask the AI Risk Agent',
+  askRiskAgent:'Ask the AI Risk Agent',
   riskAgentLoading:'Analyzing via the AI agent (Groq)...',
   riskAgentTitle:'AI Agent Assessment',
-  mediateBtn:'🤝 Mediate with AI Agent',
+  mediateBtn:'Mediate with AI Agent',
   mediateLoading:'Drafting a resolution via the AI agent...',
   mediateMsgTitle:'Agent Message to Member',
   restructOptionsTitle:'Restructuring Options',
   draftContractTitle:'Draft Agreement',
   yieldCardTitle:'Yield on Pooled Funds',
   yieldDesc:'Calculate potential yield from investing the idle pooled amount in a Shariah-compliant money market fund (AI agent).',
-  yieldBtn:'💰 Calculate Yield',
+  yieldBtn:'Calculate Yield',
   yieldLoading:'Calculating yield via the AI agent...',
   yieldEarnedLabel:'Yield Earned',yieldNewTotalLabel:'New Total',
   agentErrorPrefix:'⚠️ ',
+  valueProp1:'AI-screened member risk',valueProp2:'Automatic fair turn order',valueProp3:'Shariah-compliant yield on pooled funds',
+  nafathExplain:"We verify your identity via Nafath to protect every member of the circle from fraud.",
+  privacyNote:'Your data is encrypted and used only for identity verification.',
+  otpPrivacy:"We'll never ask you to share this code with anyone, even someone claiming to be support.",
+  salaryDateLabel:'Salary Date',financialGoalLabel:'Financial Goal',
+  goalPH:'e.g. Saving up for a car',
+  aiOptToggle:'AI turn optimization (optional)',
+  suggestOrderBtn:'Suggest a fair order with AI',
+  suggestOrderLoading:"AI agent is analyzing members' salary dates and goals...",
+  turnReasonsTitle:'Why this order',
+  applyOrderBtn:'Apply this order',
+  orderAppliedMsg:'Suggested order applied',
+  subtotalLabel:"This month's contribution",queuePosLabel:'Your position in queue',totalPotLabel:'Total circle pot',
+  contractTitle:'Digital Agreement',
+  contractDesc:'Before starting the circle, review the agreement summary that every member digitally signs via Nafath.',
+  contractMembers:'Members',contractAmount:'Monthly Amount',contractOrder:'Payout Order',
+  contractPolicy:'Dispute Policy',contractPolicyVal:'Automatic AI-mediated resolution on missed payments',
+  signContractBtn:'Sign via Nafath & Start Circle',
+  contractSignedMsg:'Digitally signed via Nafath',
+  alinmaBadge:'In partnership with Alinma Bank',shariahBadge:'Shariah-compliant',
+  trustRiskTitle:'Trust & Risk',
+  trustRiskDesc:"These assessments are private to you as organizer and are never shown to other members. Any member can request human review of a decision.",
+  noFlagged:'No members currently flagged',
+  aiServiceDown:'Could not reach the AI agent service right now. Please try again shortly.',
+  reqReviewBtn:'Flag an issue / request human review',
+  reqReviewSent:'Your request has been sent. Support will review this decision within 24 hours.',
+  activityTitle:'AI Activity',
+  actRiskAssessed:function(n){return 'Risk Agent assessed '+n+' joining'},
+  actMediated:function(n){return 'Mediator Agent reached out to '+n},
+  actYield:'Yield Agent calculated expected return on the pooled funds',
+  actTurn:'Turn Agent suggested a new payout order',
+  receiptDateLabel:'Date',receiptMethodLabel:'Payment Method',
 }
 };
 
@@ -416,6 +484,7 @@ function isA(){return state.lang==='ar'}
 function tt(){return T[state.lang]}
 function ta(){return isA()?'right':'left'}
 function el(id){return document.getElementById(id)}
+function setHtml(id,html){var e=el(id);if(e)e.innerHTML=html;return e;}
 function on(id,evt,fn){var e=el(id);if(e)e.addEventListener(evt,fn)}
 function qa(sel){return document.querySelectorAll(sel)}
 function applyScale(){document.documentElement.style.setProperty('--sc',({normal:1,large:1.2,xlarge:1.45})[state.settings.textSize]||1)}
@@ -431,6 +500,95 @@ function addMonths(iso,n){
   d.setDate(Math.min(day,daysInMonth));
   return d;
 }
+function fmtTime(d){var h=d.getHours(),m=d.getMinutes();return (h<10?'0':'')+h+':'+(m<10?'0':'')+m;}
+
+// ═══════════════════════════════════════════════════════════
+// 5b. ICON SYSTEM — small inline SVG set replacing structural emoji
+// ═══════════════════════════════════════════════════════════
+var ICONS={
+  home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/>',
+  plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+  settings:'<line x1="4" y1="6" x2="20" y2="6"/><circle cx="15" cy="6" r="2"/><line x1="4" y1="12" x2="20" y2="12"/><circle cx="9" cy="12" r="2"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="16" cy="18" r="2"/>',
+  back:'<polyline points="15 18 9 12 15 6"/>',
+  bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
+  shield:'<path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/>',
+  chat:'<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>',
+  trend:'<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>',
+  lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  check:'<polyline points="20 6 9 17 4 12"/>',
+  calendar:'<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+  clock:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  sparkles:'<path d="M12 2l1.6 5.4L19 9l-5.4 1.6L12 16l-1.6-5.4L5 9l5.4-1.6L12 2z"/><path d="M19 15l.7 2.3L22 18l-2.3.7L19 21l-.7-2.3L16 18l2.3-.7L19 15z"/>',
+  users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  alert:'<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+  file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>',
+  bank:'<line x1="3" y1="21" x2="21" y2="21"/><line x1="6" y1="21" x2="6" y2="9"/><line x1="10" y1="21" x2="10" y2="9"/><line x1="14" y1="21" x2="14" y2="9"/><line x1="18" y1="21" x2="18" y2="9"/><polygon points="12 2 21 8 3 8"/>',
+  user:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  phone:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>',
+  info:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
+  card:'<rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>',
+  logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>'
+};
+function icon(name,size,cls){size=size||18;return '<svg class="ic'+(cls?' '+cls:'')+'" width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[name]||'')+'</svg>';}
+function iconCirc(name,size,bg,fg){return '<div class="ic-circ" style="'+(bg?'background:'+bg+';':'')+(fg?'color:'+fg+';':'')+'">'+icon(name,size||18)+'</div>';}
+
+// ═══════════════════════════════════════════════════════════
+// 5c. UNIFIED AI AGENT CARD — one visual language for all 4 agents
+// ═══════════════════════════════════════════════════════════
+var AGENT_META={
+  risk:{icon:'shield',nameAr:'وكيل المخاطر',nameEn:'Risk Agent'},
+  turn:{icon:'sparkles',nameAr:'وكيل الترتيب',nameEn:'Turn Agent'},
+  yield:{icon:'trend',nameAr:'وكيل العائد',nameEn:'Yield Agent'},
+  mediator:{icon:'chat',nameAr:'وكيل الوساطة',nameEn:'Mediator Agent'}
+};
+function aiCardShell(agentKey,innerHtml,showReview){
+  var l=tt(),meta=AGENT_META[agentKey],now=fmtTime(new Date());
+  return '<div class="cd-ai"><div class="ai-head" style="'+(isA()?'flex-direction:row-reverse;':'')+'">'+
+    '<div class="ai-ic">'+icon(meta.icon,17)+'</div>'+
+    '<div style="flex:1;text-align:'+ta()+'"><p class="ai-name">'+(isA()?meta.nameAr:meta.nameEn)+'</p></div>'+
+    '<p class="ai-time">'+now+'</p></div>'+
+    innerHtml+
+    (showReview?'<button class="ai-review req-review" style="'+(isA()?'flex-direction:row-reverse;':'')+'">'+icon('alert',13)+tt().reqReviewBtn+'</button>':'')+
+    '</div>';
+}
+function bindReviewLinks(){
+  qa('.req-review').forEach(function(btn){
+    if(btn._bound)return;btn._bound=true;
+    btn.addEventListener('click',function(){
+      btn.outerHTML='<p class="ts cm" style="margin-top:10px">'+icon('check',13)+' '+tt().reqReviewSent+'</p>';
+    });
+  });
+}
+function skeletonHtml(lines){
+  lines=lines||3;var h='<div class="skel-wrap">';
+  for(var i=0;i<lines;i++)h+='<div class="skel-row" style="width:'+(100-i*18)+'%"></div>';
+  return h+'</div>';
+}
+
+// ═══════════════════════════════════════════════════════════
+// 5d. ACTIVITY TIMELINE — makes the Orchestrator's chained decisions visible
+// ═══════════════════════════════════════════════════════════
+var DB_ACT='waj_activity';
+function getActivityAll(){try{return JSON.parse(localStorage.getItem(DB_ACT))||{};}catch(e){return {};}}
+function addActivity(circleId,agentKey,ar,en){
+  var all=getActivityAll();
+  if(!all[circleId])all[circleId]=[];
+  all[circleId].unshift({agent:agentKey,ar:ar,en:en,ts:Date.now()});
+  all[circleId]=all[circleId].slice(0,12);
+  localStorage.setItem(DB_ACT,JSON.stringify(all));
+}
+function renderTimeline(circleId){
+  var l=tt(),list=(getActivityAll()[circleId]||[]);
+  if(list.length===0)return '';
+  var rows='';
+  list.forEach(function(a){
+    var meta=AGENT_META[a.agent]||AGENT_META.risk;
+    rows+='<div class="tl-item"><div class="tl-dot">'+icon(meta.icon,14)+'</div>'+
+      '<div class="tl-body"><p class="tl-txt">'+(isA()?a.ar:a.en)+'</p>'+
+      '<p class="tl-time">'+fmtTime(new Date(a.ts))+'</p></div></div>';
+  });
+  return '<div class="cd"><p class="st">'+l.activityTitle+'</p><div class="timeline">'+rows+'</div></div>';
+}
 
 // ═══════════════════════════════════════════════════════════
 // 6. SCREENS
@@ -440,7 +598,12 @@ function addMonths(iso,n){
 function scrLanguage(){
   $app.innerHTML='<div class="cen">'+logoHtml()+
     '<p class="txl b8 ct tc" style="margin-bottom:6px">اختر لغتك</p>'+
-    '<p class="tb cm tc" style="margin-bottom:36px">Choose your language</p>'+
+    '<p class="tb cm tc" style="margin-bottom:24px">Choose your language</p>'+
+    '<div class="vstrip">'+
+    '<div class="vchip">'+iconCirc('shield',16)+'<p>فحص المخاطر بالذكاء الاصطناعي · AI risk screening</p></div>'+
+    '<div class="vchip">'+iconCirc('sparkles',16)+'<p>ترتيب دور عادل تلقائياً · Fair automatic turn order</p></div>'+
+    '<div class="vchip">'+iconCirc('trend',16)+'<p>عائد شرعي على المبلغ المجمّع · Shariah-compliant yield</p></div>'+
+    '</div>'+
     '<div style="width:100%">'+
     '<button id="la" class="lbtn" style="flex-direction:row-reverse"><span style="font-size:28px">🇸🇦</span><div style="text-align:right"><p class="txl b9 ct">العربية</p><p class="ts cm">Arabic</p></div></button>'+
     '<button id="le" class="lbtn"><div style="text-align:left"><p class="txl b9 ct">English</p><p class="ts cm">الإنجليزية</p></div><span style="font-size:28px">🌐</span></button></div></div>';
@@ -457,7 +620,11 @@ function scrPhone(){
     '<div class="fg"><label class="fl">'+l.phoneLabel+'</label><div class="phr"><div class="phx"><span>🇸🇦</span><span>+966</span></div><input id="phi" type="tel" inputmode="numeric" dir="ltr" class="fi f1" placeholder="'+l.phonePH+'" maxlength="10" value="'+(state.loginPhone||'')+'" /></div></div>'+
     '<div class="fg"><label class="fl">'+l.usernameLabel+'</label><input id="uname" type="text" dir="'+(isA()?'rtl':'ltr')+'" class="fi" placeholder="'+l.usernamePH+'" value="'+(state.loginUsername||'')+'" /></div>'+
     '<p id="pe" class="ts cr" style="margin-top:-8px;margin-bottom:8px;display:none;text-align:'+ta()+'"></p>'+
-    '<div style="flex:1"></div><div class="fc g12"><button id="bsc" class="bp">'+l.sendCode+'</button><p class="tx cm tc">🔐 '+l.nafath+'</p></div></div>';
+    '<div class="f row g10" style="'+(isA()?'flex-direction:row-reverse;':'')+'background:var(--primary-lt);border-radius:14px;padding:12px 14px;margin-bottom:8px">'+
+    icon('lock',17,'cp')+'<p class="tx cm" style="text-align:'+ta()+'">'+l.nafathExplain+'</p></div>'+
+    '<div style="flex:1"></div><div class="fc g12"><button id="bsc" class="bp">'+l.sendCode+'</button>'+
+    '<div class="tc"><span class="trust-badge">'+iconCirc('lock',12)+l.nafath+'</span></div>'+
+    '<p class="tx cm tc">'+l.privacyNote+'</p></div></div>';
   on('nid','input',function(){state.loginNationalId=el('nid').value.replace(/\D/g,'').slice(0,10)});
   on('phi','input',function(){state.loginPhone=el('phi').value.replace(/\D/g,'').slice(0,10)});
   on('uname','input',function(){state.loginUsername=el('uname').value});
@@ -478,6 +645,7 @@ function scrOtp(){
   $app.innerHTML='<div class="auth">'+logoHtml()+
     '<div style="text-align:'+ta()+';margin-bottom:10px"><h2 class="t2 b9 ct" style="margin-bottom:8px">'+l.enterCode+'</h2><p class="tb cm">'+l.codeSentTo+': <strong dir="ltr" style="color:var(--text)">+966 '+state.loginPhone+'</strong></p></div>'+
     '<div class="otpr"><input class="otp" id="o0" type="text" inputmode="numeric" maxlength="1" /><input class="otp" id="o1" type="text" inputmode="numeric" maxlength="1" /><input class="otp" id="o2" type="text" inputmode="numeric" maxlength="1" /><input class="otp" id="o3" type="text" inputmode="numeric" maxlength="1" /></div>'+
+    '<p class="tx cm tc" style="margin-top:18px">'+l.otpPrivacy+'</p>'+
     '<div style="flex:1"></div><div class="fc g14 ac"><button id="bv" class="bp" disabled>'+l.verify+'</button><button id="br" class="bg-btn" style="width:auto">'+l.resend+'</button></div></div>';
   var bx=[el('o0'),el('o1'),el('o2'),el('o3')];
   function chk(){var f=bx.every(function(b){return b.value.length===1});el('bv').disabled=!f;bx.forEach(function(b){b.classList.toggle('on',b.value.length===1)})}
@@ -502,7 +670,7 @@ function scrCircles(){
   });
 
   if(circles.length===0&&invites.length===0){
-    h='<div class="cd" style="text-align:center;padding:40px 20px"><p style="font-size:48px;margin-bottom:14px">🏦</p><p class="tl b7 ct" style="margin-bottom:8px">'+l.noCircles+'</p><p class="tb cm">'+l.noCirclesSub+'</p></div>';
+    h='<div class="cd" style="text-align:center;padding:40px 20px"><div class="empty-ic">'+icon('users',30)+'</div><p class="tl b7 ct" style="margin-bottom:8px">'+l.noCircles+'</p><p class="tb cm">'+l.noCirclesSub+'</p></div>';
   } else {
     circles.forEach(function(c){
       var nm=isA()?c.ar:c.en,isOrg=c.myRole==='organizer';
@@ -516,7 +684,7 @@ function scrCircles(){
         : '<span class="bz '+(ok?'bz-gr':'bz-yl')+'">'+(ok?l.statusActive:'!')+'</span>';
       var statsHtml=isWaiting
         ? '<div class="cstats"><div class="cstat"><p class="csv">'+c.amount+'</p><p class="csl">'+l.monthlyUnit+'</p></div>'+
-          '<div class="cstat"><p class="csv tb">'+l.confirmedOf(conf,c.members.length)+'</p><p class="csl">'+(isA()?'أكدوا':'Confirmed')+'</p></div>'+
+          '<div class="cstat"><p class="csv tb" dir="ltr">'+l.confirmedOf(conf,c.members.length)+'</p><p class="csl">'+(isA()?'أكدوا':'Confirmed')+'</p></div>'+
           '<div class="cstat"><p class="csv" style="color:var(--gold)">'+turnM+'</p><p class="csl">'+l.myTurnIn+'</p></div></div>'
         : '<div class="cstats" style="grid-template-columns:1fr 1fr"><div class="cstat"><p class="csv">'+c.amount+'</p><p class="csl">'+l.monthlyUnit+'</p></div>'+
           '<div class="cstat"><p class="csv" style="color:var(--gold)">'+turnM+'</p><p class="csl">'+l.myTurnIn+'</p></div></div>';
@@ -527,13 +695,13 @@ function scrCircles(){
         '<div class="f row g8" style="flex-wrap:wrap"><span class="bz '+(isOrg?'bz-go':'bz-pr')+'">'+(isOrg?l.roleOrganizer:l.roleMember)+'</span>'+statusBadge+'</div></div>'+
         '<span class="cm txl" style="margin-'+(isA()?'right':'left')+':8px">›</span></div>'+
         statsHtml+
-        (isWaiting?'':'<p class="ts cm" style="text-align:'+ta()+';margin-top:8px;font-weight:600">⏱ '+l.daysLeftLabel(c.daysLeft)+'</p>')+
+        (isWaiting?'':'<p class="ts cm" style="text-align:'+ta()+';margin-top:8px;font-weight:600">'+icon('clock',13)+' '+l.daysLeftLabel(c.daysLeft)+'</p>')+
         '</div>';
     });
   }
   var invitesBlock=invites.length>0?'<p class="slbl" style="text-align:'+ta()+';margin-top:0">'+l.invitationsTitle+'</p>'+ih:'';
   var unread=getNotifications().filter(function(n){return !n.read}).length;
-  var bellHtml='<button id="bbell" class="bell-btn">🔔'+(unread>0?'<span class="bell-dot"></span>':'')+'</button>';
+  var bellHtml='<button id="bbell" class="bell-btn">'+icon('bell',18)+(unread>0?'<span class="bell-dot"></span>':'')+'</button>';
   var brandHtml='<div class="f row g6 ac" style="'+(isA()?'flex-direction:row-reverse;':'')+'"><img src="Logo-Jamiyahtech.png" class="brand-ic" alt="" /><p class="htop" style="margin-bottom:0">جمعيتك · JameyaTech</p></div>';
   $app.innerHTML='<div class="has-nav"><div class="hdr"><div class="f row jb ac">'+brandHtml+bellHtml+'</div><h1 style="text-align:'+ta()+'">'+l.myCircles+'</h1></div><div class="body">'+invitesBlock+h+'</div></div>';
   qa('.cc').forEach(function(card){card.addEventListener('click',function(){setState({activeCircleId:parseInt(card.dataset.cid,10)})})});
@@ -545,7 +713,7 @@ function scrCircles(){
 function scrNotifications(){
   var l=tt(),list=getNotifications(),h='';
   if(list.length===0){
-    h='<div class="cd" style="text-align:center;padding:40px 20px"><p style="font-size:48px;margin-bottom:14px">🔔</p><p class="tb cm">'+l.noNotifications+'</p></div>';
+    h='<div class="cd" style="text-align:center;padding:40px 20px"><div class="empty-ic">'+icon('bell',28)+'</div><p class="tb cm">'+l.noNotifications+'</p></div>';
   } else {
     list.forEach(function(n){
       h+='<div class="cd" style="text-align:'+ta()+'"><p class="tb b7 ct">'+(isA()?n.ar:n.en)+'</p>'+
@@ -553,7 +721,7 @@ function scrNotifications(){
     });
   }
   markNotificationsRead();
-  $app.innerHTML='<div class="has-nav"><div class="hdr"><button class="bbk" id="bbknotif">'+l.backBtn+'</button>'+
+  $app.innerHTML='<div class="has-nav"><div class="hdr"><button class="bbk" id="bbknotif">'+icon('back',15,'ic-back')+l.backBtn+'</button>'+
     '<h1 style="text-align:'+ta()+'">'+l.notificationsTitle+'</h1></div><div class="body">'+h+'</div></div>';
   on('bbknotif','click',function(){setState({notifView:false})});
 }
@@ -593,21 +761,23 @@ function scrDetail(){
 
   if(state.payMode==='form')return scrPay(c);
   if(state.payMode==='success')return scrPaySuccess(c);
+  if(state.contractView==='preview')return scrContract(c);
+  if(state.contractView==='signed')return scrContractSigned(c);
 
   // ── WAITING STATE ──
   if(isWaiting){
     var pct=Math.round((conf/c.members.length)*100);
 
     // Locked banner
-    detail+='<div class="locked-overlay"><div class="locked-icon">🔒</div>'+
+    detail+='<div class="locked-overlay"><div class="locked-icon">'+icon('lock',26)+'</div>'+
       '<p class="tl b8 ct" style="margin-bottom:6px">'+l.waitingTitle+'</p>'+
       '<p class="ts cm" style="margin-bottom:12px">'+l.waitingDesc+'</p>'+
       '<p class="tm b7 ct">'+l.confirmProgress+'</p>'+
-      '<p class="t2 b9 cp" style="margin-top:4px">'+conf+' / '+c.members.length+'</p>'+
+      '<p class="t2 b9 cp" dir="ltr" style="margin-top:4px">'+conf+' / '+c.members.length+'</p>'+
       '<div class="prog-bar"><div class="prog-fill" style="width:'+pct+'%"></div></div></div>';
 
     // Start date
-    detail+='<div class="cd"><div class="date-display"><span style="font-size:22px">📅</span>'+
+    detail+='<div class="cd"><div class="date-display"><span style="color:var(--primary)">'+icon('calendar',22)+'</span>'+
       '<div style="flex:1;text-align:'+ta()+'"><p class="tx cm">'+l.startDateDisplay+'</p>'+
       '<p class="tm b7 ct">'+fmtDate(c.startDate)+'</p></div></div></div>';
 
@@ -621,7 +791,9 @@ function scrDetail(){
     // Turn order (organizer can drag to reorder) + add member
     if(isOrg){
       detail+='<div class="cd"><p class="st">'+l.turnOrderTitle+'</p>'+
-        '<p class="ts cm" style="margin-bottom:16px">'+l.turnOrderDesc+'</p>'+
+        '<p class="ts cm" style="margin-bottom:14px">'+l.turnOrderDesc+'</p>'+
+        '<button id="bsuggestOrder" class="bo f row g6 ac jc" style="margin-bottom:16px;'+(isA()?'flex-direction:row-reverse':'')+'">'+icon('sparkles',15)+l.suggestOrderBtn+'</button>'+
+        '<div id="turnAiResult"></div>'+
         '<div id="sortableList">';
       sorted.forEach(function(m){
         var n=isA()?m.ar:m.en;
@@ -638,7 +810,7 @@ function scrDetail(){
         '<div class="fg"><label class="fl">'+l.memberNameLabel+'</label><input id="dmn" type="text" class="fi" placeholder="'+l.memberNamePH+'" /></div>'+
         '<div class="fg" style="margin-bottom:0"><label class="fl">'+l.memberPhoneLabel+'</label><input id="dmp" type="tel" inputmode="numeric" dir="ltr" class="fi" placeholder="'+l.memberPhonePH+'" maxlength="10" /></div>'+
         '<div id="dra"></div><div id="draAi" style="margin-top:10px"></div>'+
-        '<button id="dbaAi" class="bg-btn" style="display:none;margin-top:4px">'+l.askRiskAgent+'</button>'+
+        '<button id="dbaAi" class="bg-btn f row g6 ac jc" style="display:none;margin-top:4px;'+(isA()?'flex-direction:row-reverse':'')+'">'+icon('sparkles',14)+l.askRiskAgent+'</button>'+
         '<p id="de2" class="ts cr" style="margin-bottom:12px;margin-top:12px;display:none;text-align:'+ta()+'"></p>'+
         '<button id="dba" class="bo" style="margin-top:12px">'+l.addBtn+'</button></div>'+
         '</div>';
@@ -659,7 +831,7 @@ function scrDetail(){
         '<p id="priceErr" class="ts cr" style="margin-bottom:8px;display:none;text-align:'+ta()+'"></p>'+
         '<div class="f row g10"><button id="bsavePrice" class="bp" style="flex:1">'+l.savePriceBtn+'</button>'+
         '<button id="bcancelPrice" class="bg-btn" style="flex:1">'+l.cancelBtn+'</button></div></div>'+
-        '<p id="priceMsg" class="ts" style="color:var(--green);margin-top:10px;display:none;text-align:'+ta()+'">'+l.priceUpdatedMsg+'</p>'+
+        '<p id="priceMsg" class="ts" style="color:var(--green);margin-top:10px;display:none;text-align:'+ta()+'">'+icon('check',13)+' '+l.priceUpdatedMsg+'</p>'+
         '<div style="border-top:1px solid var(--border);margin:16px 0"></div>'+
         '<button id="btglDelete" class="bd">'+l.deleteCircleBtn+'</button>'+
         '<div id="deleteConfirm" style="display:none;margin-top:12px;text-align:'+ta()+'">'+
@@ -668,6 +840,19 @@ function scrDetail(){
         '<div class="f row g10"><button id="bconfirmDelete" class="bd" style="flex:1">'+l.confirmDeleteBtn+'</button>'+
         '<button id="bcancelDelete" class="bg-btn" style="flex:1">'+l.cancelBtn+'</button></div></div>'+
         '</div>';
+
+      // Trust & Risk — private to the organizer; individual risk flags are never shown to other members
+      var flagged=c.members.filter(function(m){return m.risk==='red'||m.risk==='yellow'});
+      var flaggedHtml='';
+      if(flagged.length===0){
+        flaggedHtml='<p class="ts cm">'+l.noFlagged+'</p>';
+      } else {
+        flagged.forEach(function(m){
+          flaggedHtml+='<div class="f row jb ac" style="'+(isA()?'flex-direction:row-reverse;':'')+'padding:10px 0;border-bottom:1px solid var(--border)"><p class="tb b7 ct">'+(isA()?m.ar:m.en)+'</p><span class="bz '+(m.risk==='red'?'bz-rd':'bz-yl')+'">'+(m.risk==='red'?l.riskRedTitle:l.riskYellowTitle)+'</span></div>';
+        });
+      }
+      detail+='<div class="cd"><p class="st f row g8 ac" style="'+(isA()?'flex-direction:row-reverse;':'')+'">'+icon('shield',17)+l.trustRiskTitle+'</p>'+
+        '<p class="ts cm" style="margin-bottom:12px">'+l.trustRiskDesc+'</p>'+flaggedHtml+'</div>';
     }
 
   // ── ACTIVE STATE ──
@@ -678,7 +863,7 @@ function scrDetail(){
       '<div style="flex:1;text-align:'+ta()+'"><p class="tl b8 ct">'+(ok?l.allGood:l.hasDelay)+'</p>'+
       (!ok?'<p class="ts" style="margin-top:5px;color:var(--yellow);font-weight:600">'+l.handlingIt(unpN)+'</p>':'')+
       '</div></div>'+
-      (!ok?'<button id="bmediate" class="bg-btn" style="margin-top:6px">'+l.mediateBtn+'</button><div id="mediateResult" style="margin-top:10px"></div>':'')+
+      (!ok?'<button id="bmediate" class="bg-btn f row g6 ac jc" style="margin-top:6px;'+(isA()?'flex-direction:row-reverse':'')+'">'+icon('chat',14)+l.mediateBtn+'</button><div id="mediateResult" style="margin-top:10px"></div>':'')+
       '</div>';
 
     // Pay due (current user)
@@ -691,7 +876,7 @@ function scrDetail(){
     }
 
     // Start date
-    detail+='<div class="cd"><div class="date-display"><span style="font-size:22px">📅</span>'+
+    detail+='<div class="cd"><div class="date-display"><span style="color:var(--primary)">'+icon('calendar',22)+'</span>'+
       '<div style="flex:1;text-align:'+ta()+'"><p class="tx cm">'+l.startDateDisplay+'</p>'+
       '<p class="tm b7 ct">'+fmtDate(c.startDate)+'</p></div></div></div>';
 
@@ -708,8 +893,11 @@ function scrDetail(){
     // Yield Agent — potential earnings on the idle pooled amount
     detail+='<div class="cd"><p class="st">'+l.yieldCardTitle+'</p>'+
       '<p class="ts cm" style="margin-bottom:14px">'+l.yieldDesc+'</p>'+
-      '<button id="byield" class="bo">'+l.yieldBtn+'</button>'+
+      '<button id="byield" class="bo f row g6 ac jc" style="'+(isA()?'flex-direction:row-reverse;':'')+'">'+icon('trend',15)+l.yieldBtn+'</button>'+
       '<div id="yieldResult" style="margin-top:12px"></div></div>';
+
+    // Orchestrator activity — makes the multi-agent system's chained work visible
+    detail+=renderTimeline(c.id);
 
     // Members
     var cols='<div class="f row jb ac" style="padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:12px;'+(isA()?'flex-direction:row-reverse;':'')+'">'+
@@ -732,19 +920,19 @@ function scrDetail(){
     detail+='<div class="cd"><div class="f row jb ac" style="margin-bottom:14px;'+(isA()?'flex-direction:row-reverse;':'')+'"><p class="st" style="margin-bottom:0">'+l.membersTitle+'</p></div>'+cols+rows+'</div>';
   }
 
-  $app.innerHTML='<div class="has-nav"><div class="hdr"><button class="bbk" id="bbk">'+l.backBtn+'</button>'+
+  $app.innerHTML='<div class="has-nav"><div class="hdr"><button class="bbk" id="bbk">'+icon('back',15,'ic-back')+l.backBtn+'</button>'+
     '<p class="htop" style="text-align:'+ta()+'">'+(isOrg?l.roleOrganizer:l.roleMember)+' · '+(isWaiting?l.statusWaiting:l.turnOf(c.currentTurn,c.totalTurns))+'</p>'+
     '<h1 style="text-align:'+ta()+'">'+nm+'</h1></div><div class="body">'+detail+'</div></div>';
 
   // Bindings
-  on('bbk','click',function(){setState({activeCircleId:null,payMode:'off'})});
+  on('bbk','click',function(){setState({activeCircleId:null,payMode:'off',contractView:'off'})});
 
   // Pay now
   on('bgopay','click',function(){setState({payMode:'form'})});
 
   // Mediator Agent — draft a resolution for the first unpaid member
   on('bmediate','click',function(){
-    el('mediateResult').innerHTML='<p class="ts cm">'+l.mediateLoading+'</p>';
+    el('mediateResult').innerHTML=skeletonHtml(3);
     var target=unpaid[0];
     if(!target)return;
     var payload={event_type:'payment_missed',member_data:{
@@ -754,35 +942,71 @@ function scrDetail(){
       amount_due:c.amount
     }};
     callAgent(payload,function(result,err){
-      if(err){el('mediateResult').innerHTML='<p class="ts cr">'+l.agentErrorPrefix+err+'</p>';return;}
+      if(err){console.error('Mediator Agent error:',err);setHtml('mediateResult',aiCardShell('mediator','<p class="ts cr" style="display:flex;align-items:center;gap:6px">'+icon('alert',15)+' '+l.aiServiceDown+'</p>',false));return;}
       var med=(result&&result.result)||{};
       var optsHtml='';
       (med.restructuring_options||[]).forEach(function(opt,i){
         optsHtml+='<div class="cd" style="margin-bottom:8px;padding:12px 14px"><p class="ts ct"><strong>'+(i+1)+'.</strong> '+opt+'</p></div>';
       });
-      el('mediateResult').innerHTML=
-        '<div class="cd cd-pu" style="margin-top:0"><p class="tm b8" style="margin-bottom:6px">'+l.mediateMsgTitle+'</p><p class="ts ct">'+(med.message_to_member||'')+'</p></div>'+
-        '<p class="slbl" style="margin:14px 0 8px;text-align:'+ta()+'">'+l.restructOptionsTitle+'</p>'+optsHtml+
-        '<div class="cd" style="margin-top:0"><p class="tm b8" style="margin-bottom:6px">'+l.draftContractTitle+'</p><p class="ts cm">'+(med.draft_contract_note||'')+'</p></div>';
+      var inner='<p class="tm b8" style="margin-bottom:6px">'+l.mediateMsgTitle+'</p><p class="ts ct" style="margin-bottom:14px">'+(med.message_to_member||'')+'</p>'+
+        '<p class="slbl" style="margin:0 0 8px;text-align:'+ta()+'">'+l.restructOptionsTitle+'</p>'+optsHtml+
+        '<div class="cd" style="margin:10px 0 0"><p class="tm b8" style="margin-bottom:6px;display:flex;align-items:center;gap:6px">'+icon('file',15)+' '+l.draftContractTitle+'</p><p class="ts cm">'+(med.draft_contract_note||'')+'</p></div>';
+      if(!setHtml('mediateResult',aiCardShell('mediator',inner,true)))return;
+      bindReviewLinks();
+      addActivity(c.id,'mediator',T.ar.actMediated(target.ar),T.en.actMediated(target.en));
     });
   });
 
   // Yield Agent
   on('byield','click',function(){
-    el('yieldResult').innerHTML='<p class="ts cm">'+l.yieldLoading+'</p>';
+    el('yieldResult').innerHTML=skeletonHtml(2);
     var payload={event_type:'calculate_yield',pooled_amount:pot,months_idle:c.currentTurn||1};
     callAgent(payload,function(result,err){
-      if(err){el('yieldResult').innerHTML='<p class="ts cr">'+l.agentErrorPrefix+err+'</p>';return;}
+      if(err){console.error('Yield Agent error:',err);setHtml('yieldResult',aiCardShell('yield','<p class="ts cr" style="display:flex;align-items:center;gap:6px">'+icon('alert',15)+' '+l.aiServiceDown+'</p>',false));return;}
       var y=(result&&result.result)||{};
-      el('yieldResult').innerHTML=
-        '<div class="twoc" style="margin-bottom:12px"><div class="cd" style="margin-bottom:0;text-align:center"><p class="tx cm" style="margin-bottom:6px">'+l.yieldEarnedLabel+'</p><p class="tl b9" style="color:var(--gold)" dir="ltr">+'+y.yield_earned+'</p></div>'+
+      var inner='<div class="twoc" style="margin-bottom:12px"><div class="cd" style="margin-bottom:0;text-align:center"><p class="tx cm" style="margin-bottom:6px">'+l.yieldEarnedLabel+'</p><p class="tl b9" style="color:var(--gold)" dir="ltr">+'+y.yield_earned+'</p></div>'+
         '<div class="cd" style="margin-bottom:0;text-align:center"><p class="tx cm" style="margin-bottom:6px">'+l.yieldNewTotalLabel+'</p><p class="tl b9 cp" dir="ltr">'+y.new_total+'</p></div></div>'+
-        '<p class="ts ct" style="text-align:'+ta()+'">'+(y.explanation||'')+'</p>';
+        '<p class="ts ct" style="text-align:'+ta()+';margin-bottom:12px">'+(y.explanation||'')+'</p>'+
+        '<div class="trust-row">'+
+        '<span class="trust-badge">'+iconCirc('bank',13)+l.alinmaBadge+'</span>'+
+        '<span class="trust-badge">'+iconCirc('shield',13)+l.shariahBadge+'</span></div>';
+      if(!setHtml('yieldResult',aiCardShell('yield',inner,false)))return;
+      addActivity(c.id,'yield',T.ar.actYield,T.en.actYield);
     });
   });
 
   // Drag-to-reorder turn order
   bindSortable('sortableList',c.id);
+
+  // Turn Agent — AI-suggested fair payout order from salary date + financial goal
+  on('bsuggestOrder','click',function(){
+    el('turnAiResult').innerHTML=skeletonHtml(3);
+    var payload={event_type:'assign_turns',members:c.members.map(function(m){
+      return {name:isA()?m.ar:m.en,salary_date:m.salaryDate||27,financial_goal:m.goal||(isA()?'ادخار مستقر، لا حاجة عاجلة':'stable savings, no urgent need')};
+    })};
+    callAgent(payload,function(result,err){
+      if(err){console.error('Turn Agent error:',err);setHtml('turnAiResult',aiCardShell('turn','<p class="ts cr" style="display:flex;align-items:center;gap:6px">'+icon('alert',15)+' '+l.aiServiceDown+'</p>',false));return;}
+      var order=(result&&result.result&&result.result.turn_order)||[];
+      var reasonsHtml='';
+      order.forEach(function(o,i){
+        reasonsHtml+='<div style="padding:8px 0;border-bottom:1px solid var(--border)"><p class="ts b7 ct">'+(i+1)+'. '+o.name+'</p><p class="tx cm" style="margin-top:2px">'+(o.reason||'')+'</p></div>';
+      });
+      var inner='<p class="slbl" style="margin:0 0 6px;text-align:'+ta()+'">'+l.turnReasonsTitle+'</p>'+reasonsHtml+
+        '<button id="applyOrderBtn" class="bo" style="margin-top:14px">'+l.applyOrderBtn+'</button>';
+      if(!setHtml('turnAiResult',aiCardShell('turn',inner,false)))return;
+      addActivity(c.id,'turn',T.ar.actTurn,T.en.actTurn);
+      on('applyOrderBtn','click',function(){
+        var orderedIds=[];
+        order.forEach(function(o){
+          for(var i=0;i<c.members.length;i++){
+            if(c.members[i].ar===o.name||c.members[i].en===o.name){orderedIds.push(c.members[i].id);break;}
+          }
+        });
+        c.members.forEach(function(m){if(orderedIds.indexOf(m.id)===-1)orderedIds.push(m.id);});
+        reorderMembers(c.id,orderedIds);
+      });
+    });
+  });
 
   // Add member before start
   on('btglAdd','click',function(){
@@ -795,15 +1019,15 @@ function scrDetail(){
     el('draAi').innerHTML='';
     if(p.length===10){
       _detailRisk=checkRisk(p);
-      el('dbaAi').style.display='inline-block';
+      el('dbaAi').style.display='inline-flex';
       if(_detailRisk){
         var r=_detailRisk,isR=r.level==='red';
-        el('dra').innerHTML='<div class="rsk '+(isR?'rsk-rd':'rsk-yl')+'"><div style="font-size:22px;flex-shrink:0">'+(isR?'🚫':'⚡')+'</div><div style="flex:1"><p class="tm b8" style="margin-bottom:4px;color:'+(isR?'var(--red)':'var(--yellow)')+'">'+(isR?l.riskRedTitle:l.riskYellowTitle)+'</p><p class="ts ct" style="margin-bottom:6px"><strong>'+(isA()?r.ar:r.en)+'</strong> — '+(isA()?r.rAr:r.rEn)+'</p><p class="tx cm">'+l.riskHistory+': '+(isA()?r.hAr:r.hEn)+'</p></div></div>';
+        el('dra').innerHTML='<div class="rsk '+(isR?'rsk-rd':'rsk-yl')+'"><div style="color:'+(isR?'var(--red)':'var(--yellow)')+';flex-shrink:0">'+icon('alert',22)+'</div><div style="flex:1"><p class="tm b8" style="margin-bottom:4px;color:'+(isR?'var(--red)':'var(--yellow)')+'">'+(isR?l.riskRedTitle:l.riskYellowTitle)+'</p><p class="ts ct" style="margin-bottom:6px"><strong>'+(isA()?r.ar:r.en)+'</strong> — '+(isA()?r.rAr:r.rEn)+'</p><p class="tx cm">'+l.riskHistory+': '+(isA()?r.hAr:r.hEn)+'</p></div></div>';
         el('dba').textContent=l.addAnywayBtn;el('dba').className=isR?'bd':'bo';
       } else {el('dra').innerHTML='';el('dba').textContent=l.addBtn;el('dba').className='bo';}
     } else {_detailRisk=null;el('dra').innerHTML='';el('dba').textContent=l.addBtn;el('dba').className='bo';el('dbaAi').style.display='none';}
   });
-  on('dbaAi','click',function(){runRiskAgentCheck(el('dmn').value.trim(),_detailRisk,'draAi')});
+  on('dbaAi','click',function(){runRiskAgentCheck(el('dmn').value.trim(),_detailRisk,'draAi',c.id)});
   on('dba','click',function(){
     var n=el('dmn').value.trim(),p=el('dmp').value.trim();
     if(!n||p.length<9){el('de2').textContent=l.errFillAll;el('de2').style.display='block';return;}
@@ -811,10 +1035,7 @@ function scrDetail(){
   });
 
   // Start button
-  on('bstart','click',function(){
-    updateCircle(c.id,{status:'active',currentTurn:1,daysLeft:30});
-    setState({});
-  });
+  on('bstart','click',function(){setState({contractView:'preview'})});
 
   // Edit price
   on('btglPrice','click',function(){
@@ -852,15 +1073,19 @@ function scrDetail(){
 // ── Pay screen ────────────────────────────────────────────
 var _payMethod='mada';
 function scrPay(c){
-  var l=tt(),nm=isA()?c.ar:c.en;
-  $app.innerHTML='<div class="has-nav"><div class="hdr"><button class="bbk" id="bbkpay">'+l.backBtn+'</button>'+
+  var l=tt(),nm=isA()?c.ar:c.en,me=myMember(c),pot=c.amount*c.totalTurns;
+  $app.innerHTML='<div class="has-nav"><div class="hdr"><button class="bbk" id="bbkpay">'+icon('back',15,'ic-back')+l.backBtn+'</button>'+
     '<p class="htop" style="text-align:'+ta()+'">'+nm+'</p>'+
     '<h1 style="text-align:'+ta()+'">'+l.payScreenTitle+'</h1></div><div class="body">'+
     '<div class="cd" style="text-align:center"><p class="tx cm" style="margin-bottom:6px">'+l.amountDueLabel+'</p>'+
     '<p class="t3 b9 cp" dir="ltr">'+c.amount+' '+l.sarUnit+'</p></div>'+
+    '<div class="cd"><div class="brk">'+
+    '<div class="brk-row"><span>'+l.subtotalLabel+'</span><span dir="ltr">'+c.amount+' '+l.sarUnit+'</span></div>'+
+    '<div class="brk-row"><span>'+l.queuePosLabel+'</span><span dir="ltr">'+(me?me.turn:'—')+' / '+c.totalTurns+'</span></div>'+
+    '<div class="brk-row"><span>'+l.totalPotLabel+'</span><span dir="ltr">'+pot+' '+l.sarUnit+'</span></div></div></div>'+
     '<div class="cd"><p class="st">'+l.paymentMethodLabel+'</p>'+
-    '<div class="ltg"><button id="pmMada" class="ltb'+(_payMethod==='mada'?' on':'')+'">'+l.methodMada+'</button>'+
-    '<button id="pmApple" class="ltb'+(_payMethod==='apple'?' on':'')+'">'+l.methodApplePay+'</button></div></div>'+
+    '<div class="ltg"><button id="pmMada" class="ltb'+(_payMethod==='mada'?' on':'')+'">'+icon('card',15)+' '+l.methodMada+'</button>'+
+    '<button id="pmApple" class="ltb'+(_payMethod==='apple'?' on':'')+'">'+icon('card',15)+' '+l.methodApplePay+'</button></div></div>'+
     '<button id="bconfirmPay" class="bstart">'+l.confirmPayBtn+' · '+c.amount+' '+l.sarUnit+'</button>'+
     '</div></div>';
 
@@ -871,10 +1096,14 @@ function scrPay(c){
 }
 
 function scrPaySuccess(c){
-  var l=tt();
+  var l=tt(),now=new Date();
   $app.innerHTML='<div class="cen"><div class="suc">✓</div>'+
     '<h2 class="t2 b9 ct tc" style="margin-bottom:10px">'+l.paySuccessTitle+'</h2>'+
-    '<p class="tb cm tc" style="margin-bottom:40px">'+l.paySuccessSub+'</p>'+
+    '<p class="tb cm tc" style="margin-bottom:24px">'+l.paySuccessSub+'</p>'+
+    '<div class="brk" style="width:100%;margin-bottom:32px">'+
+    '<div class="brk-row"><span>'+l.receiptDateLabel+'</span><span>'+fmtDateObj(now)+'</span></div>'+
+    '<div class="brk-row"><span>'+l.receiptMethodLabel+'</span><span>'+(_payMethod==='mada'?l.methodMada:l.methodApplePay)+'</span></div>'+
+    '<div class="brk-row"><span>'+l.amountDueLabel+'</span><span dir="ltr">'+c.amount+' '+l.sarUnit+'</span></div></div>'+
     '<button id="bbackcircle" class="bp">'+l.backToCircle+'</button></div>';
   on('bbackcircle','click',function(){setState({payMode:'off'})});
 }
@@ -883,6 +1112,38 @@ function payNow(circleId){
   var c=getCircle(circleId);if(!c)return;
   var me=myMember(c);if(me)me.paid=true;
   updateCircle(circleId,{members:c.members});
+}
+
+// ── Digital contract (circle start) ─────────────────────────
+function scrContract(c){
+  var l=tt(),nm=isA()?c.ar:c.en,sorted=c.members.slice().sort(function(a,b){return a.turn-b.turn});
+  var orderNames=sorted.map(function(m){return isA()?m.ar:m.en}).join(isA()?'، ':', ');
+  $app.innerHTML='<div class="has-nav"><div class="hdr"><button class="bbk" id="bbkc">'+icon('back',15,'ic-back')+l.backBtn+'</button>'+
+    '<p class="htop" style="text-align:'+ta()+'">'+nm+'</p>'+
+    '<h1 style="text-align:'+ta()+'">'+l.contractTitle+'</h1></div><div class="body">'+
+    '<p class="ts cm" style="margin-bottom:16px;text-align:'+ta()+'">'+l.contractDesc+'</p>'+
+    '<div class="contract-card">'+
+    '<div class="contract-row"><span class="cm">'+l.contractMembers+'</span><span class="b7 ct">'+c.members.length+'</span></div>'+
+    '<div class="contract-row"><span class="cm">'+l.contractAmount+'</span><span class="b7 ct" dir="ltr">'+c.amount+' '+l.sarUnit+'</span></div>'+
+    '<div class="contract-row"><span class="cm">'+l.contractOrder+'</span><span class="b7 ct" style="max-width:60%;text-align:'+ta()+'">'+orderNames+'</span></div>'+
+    '<div class="contract-row"><span class="cm">'+l.contractPolicy+'</span><span class="b7 ct" style="max-width:60%;text-align:'+ta()+'">'+l.contractPolicyVal+'</span></div>'+
+    '</div>'+
+    '<button id="bsign" class="bstart f row g8 ac jc" style="margin-top:20px;'+(isA()?'flex-direction:row-reverse':'')+'">'+icon('lock',16)+l.signContractBtn+'</button>'+
+    '</div></div>';
+  on('bbkc','click',function(){setState({contractView:'off'})});
+  on('bsign','click',function(){
+    updateCircle(c.id,{status:'active',currentTurn:1,daysLeft:30});
+    setState({contractView:'signed'});
+  });
+}
+
+function scrContractSigned(c){
+  var l=tt();
+  $app.innerHTML='<div class="cen"><div class="suc">✓</div>'+
+    '<h2 class="t2 b9 ct tc" style="margin-bottom:10px">'+l.circleStartedTitle+'</h2>'+
+    '<div class="contract-signed" style="'+(isA()?'flex-direction:row-reverse;':'')+'margin:0 auto 30px">'+icon('lock',15)+l.contractSignedMsg+'</div>'+
+    '<button id="bbackc2" class="bp">'+l.backToCircle+'</button></div>';
+  on('bbackc2','click',function(){setState({contractView:'off'})});
 }
 
 function bindSortable(containerId,circleId){
@@ -976,7 +1237,7 @@ function scrCreate2(){
   var l=tt(),ml='';
   if(_cm.length===0){ml='<p class="tb cm tc" style="padding:8px 0">'+l.noMembersYet+'</p>';}
   else{_cm.forEach(function(m,i){
-    var rb='';if(m.risk)rb='<span class="bz '+(m.risk==='red'?'bz-rd':'bz-yl')+'">'+(m.risk==='red'?'🔴':'⚡')+'</span>';
+    var rb='';if(m.risk)rb='<span class="bz '+(m.risk==='red'?'bz-rd':'bz-yl')+'">'+icon('alert',11)+'</span>';
     ml+='<div class="mr" style="'+(isA()?'flex-direction:row-reverse;':'')+'"><div class="mav" style="width:40px;height:40px;font-size:15px">'+m.name.charAt(0).toUpperCase()+'</div><div style="flex:1;text-align:'+ta()+'"><p class="tb b7 ct">'+m.name+'</p><p class="ts cm" dir="ltr" style="text-align:'+ta()+'">'+m.phone+'</p></div>'+rb+'<button class="brm rmb" data-i="'+i+'">'+l.removeBtn+'</button></div>';
   });}
 
@@ -988,9 +1249,13 @@ function scrCreate2(){
     '<div class="fg"><label class="fl">'+l.memberNameLabel+'</label><input id="mn" type="text" class="fi" placeholder="'+l.memberNamePH+'" /></div>'+
     '<div class="fg" style="margin-bottom:0"><label class="fl">'+l.memberPhoneLabel+'</label><input id="mp" type="tel" inputmode="numeric" dir="ltr" class="fi" placeholder="'+l.memberPhonePH+'" maxlength="10" /></div></div>'+
     '<div id="ra"></div><div id="raAi" style="margin-top:10px"></div>'+
-    '<button id="baAi" class="bg-btn" style="display:none;margin-top:4px">'+l.askRiskAgent+'</button>'+
-    '<p id="e2" class="ts cr" style="margin-bottom:12px;display:none;text-align:'+ta()+'"></p>'+
-    '<button id="ba" class="bo">'+l.addBtn+'</button></div>'+
+    '<button id="baAi" class="bg-btn f row g6 ac jc" style="display:none;margin-top:4px;'+(isA()?'flex-direction:row-reverse':'')+'">'+icon('sparkles',14)+l.askRiskAgent+'</button>'+
+    '<button id="btglTurnOpt" class="bg-btn f row g6 ac jc" style="margin-top:4px;'+(isA()?'flex-direction:row-reverse':'')+'">'+icon('sparkles',14)+l.aiOptToggle+'</button>'+
+    '<div id="turnOptForm" style="display:none;margin-top:8px;direction:'+(isA()?'rtl':'ltr')+'">'+
+    '<div class="fg"><label class="fl">'+l.salaryDateLabel+'</label><input id="msd" type="number" inputmode="numeric" min="1" max="31" dir="ltr" class="fi" placeholder="25" /></div>'+
+    '<div class="fg" style="margin-bottom:0"><label class="fl">'+l.financialGoalLabel+'</label><input id="mgoal" type="text" class="fi" placeholder="'+l.goalPH+'" /></div></div>'+
+    '<p id="e2" class="ts cr" style="margin-bottom:12px;margin-top:12px;display:none;text-align:'+ta()+'"></p>'+
+    '<button id="ba" class="bo" style="margin-top:12px">'+l.addBtn+'</button></div>'+
     '<div class="cd"><div class="f row jb ac" style="margin-bottom:14px;'+(isA()?'flex-direction:row-reverse;':'')+'"><p class="st" style="margin-bottom:0">'+l.addedTitle+'</p><span class="bz bz-pr">'+_cm.length+'</span></div><div id="ml">'+ml+'</div></div>'+
     '<p id="ec" class="ts cr" style="margin-bottom:12px;display:none;text-align:'+ta()+'"></p>'+
     '<button id="bc" class="bp" style="margin-bottom:12px">'+l.createBtn+'</button>'+
@@ -1002,24 +1267,26 @@ function scrCreate2(){
     el('raAi').innerHTML='';
     if(p.length===10){
       _cr=checkRisk(p);
-      el('baAi').style.display='inline-block';
+      el('baAi').style.display='inline-flex';
       if(_cr){
         var r=_cr,isR=r.level==='red';
-        el('ra').innerHTML='<div class="rsk '+(isR?'rsk-rd':'rsk-yl')+'"><div style="font-size:22px;flex-shrink:0">'+(isR?'🚫':'⚡')+'</div><div style="flex:1"><p class="tm b8" style="margin-bottom:4px;color:'+(isR?'var(--red)':'var(--yellow)')+'">'+(isR?l.riskRedTitle:l.riskYellowTitle)+'</p><p class="ts ct" style="margin-bottom:6px"><strong>'+(isA()?r.ar:r.en)+'</strong> — '+(isA()?r.rAr:r.rEn)+'</p><p class="tx cm">'+l.riskHistory+': '+(isA()?r.hAr:r.hEn)+'</p></div></div>';
+        el('ra').innerHTML='<div class="rsk '+(isR?'rsk-rd':'rsk-yl')+'"><div style="color:'+(isR?'var(--red)':'var(--yellow)')+';flex-shrink:0">'+icon('alert',22)+'</div><div style="flex:1"><p class="tm b8" style="margin-bottom:4px;color:'+(isR?'var(--red)':'var(--yellow)')+'">'+(isR?l.riskRedTitle:l.riskYellowTitle)+'</p><p class="ts ct" style="margin-bottom:6px"><strong>'+(isA()?r.ar:r.en)+'</strong> — '+(isA()?r.rAr:r.rEn)+'</p><p class="tx cm">'+l.riskHistory+': '+(isA()?r.hAr:r.hEn)+'</p></div></div>';
         el('ba').textContent=l.addAnywayBtn;el('ba').className=isR?'bd':'bo';
       } else {el('ra').innerHTML='';el('ba').textContent=l.addBtn;el('ba').className='bo';}
     } else {_cr=null;el('ra').innerHTML='';el('ba').textContent=l.addBtn;el('ba').className='bo';el('baAi').style.display='none';}
   });
   on('baAi','click',function(){runRiskAgentCheck(el('mn').value.trim(),_cr,'raAi')});
+  on('btglTurnOpt','click',function(){var f=el('turnOptForm');f.style.display=f.style.display==='none'?'block':'none';});
   on('ba','click',function(){
     var n=el('mn').value.trim(),p=el('mp').value.trim();
     if(!n||p.length<9){el('e2').textContent=l.errFillAll;el('e2').style.display='block';return;}
-    _cm.push({name:n,phone:p,risk:_cr?_cr.level:null});_cr=null;setState({createStep:2});
+    var sd=parseInt(el('msd').value,10),goal=(el('mgoal').value||'').trim();
+    _cm.push({name:n,phone:p,risk:_cr?_cr.level:null,salaryDate:sd>=1&&sd<=31?sd:null,goal:goal||null});_cr=null;setState({createStep:2});
   });
   el('ml').addEventListener('click',function(e){var btn=e.target.closest('.rmb');if(!btn)return;_cm.splice(parseInt(btn.dataset.i,10),1);setState({createStep:2})});
   on('bc','click',function(){
     if(_cm.length<2){el('ec').textContent=l.errMinMembers;el('ec').style.display='block';return;}
-    var members=_cm.map(function(m,i){return{id:i+1,ar:m.name,en:m.name,init:m.name.slice(0,2).toUpperCase(),turn:i+1,paid:false,confirmed:'pending',isMe:false}});
+    var members=_cm.map(function(m,i){return{id:i+1,ar:m.name,en:m.name,init:m.name.slice(0,2).toUpperCase(),turn:i+1,paid:false,confirmed:'pending',isMe:false,risk:m.risk||null,salaryDate:m.salaryDate||null,goal:m.goal||null}});
     saveCircle({ar:_cn,en:_cn,myRole:'organizer',amount:parseInt(_ca,10),totalTurns:_cm.length,members:members,startDate:_cd});
     _cm=[];_cn='';_ca='';_cd='';_cr=null;scrSuccess();
   });
@@ -1043,13 +1310,13 @@ function scrSettings(){
     '<div class="cd"><div style="padding-bottom:18px;border-bottom:1px solid var(--border);margin-bottom:18px"><p class="fl">'+l.languageLabel+'</p><div class="ltg"><button id="sla" class="ltb'+(s.lang==='ar'?' on':'')+'">العربية</button><button id="sle" class="ltb'+(s.lang==='en'?' on':'')+'">English</button></div></div>'+
     '<div><p class="fl">'+l.textSizeLabel+'</p><div class="szopt">'+szb+'</div><div class="spv"><p class="cp b6" style="font-size:calc(16px*var(--sc))">'+l.sizePreview+'</p><p class="cm" style="font-size:calc(14px*var(--sc));margin-top:4px">'+(isA()?'١٢٣٤ ريال سعودي':'SAR 1,234')+'</p></div></div></div>'+
     '<p class="slbl" style="text-align:'+ta()+'">'+l.notifSection+'</p>'+
-    '<div class="cd"><div class="srow"><p class="tm b6 ct">💰  '+l.notifPayment+'</p><button class="tgl'+(s.notifPayment?' on':'')+'" id="tp"></button></div>'+
-    '<div class="srow"><p class="tm b6 ct">👥  '+l.notifGroup+'</p><button class="tgl'+(s.notifGroup?' on':'')+'" id="tg"></button></div></div>'+
+    '<div class="cd"><div class="srow"><div class="f row g10 ac" style="'+(isA()?'flex-direction:row-reverse;':'')+'"><div class="srow-ic">'+icon('card',16)+'</div><p class="tm b6 ct">'+l.notifPayment+'</p></div><button class="tgl'+(s.notifPayment?' on':'')+'" id="tp"></button></div>'+
+    '<div class="srow"><div class="f row g10 ac" style="'+(isA()?'flex-direction:row-reverse;':'')+'"><div class="srow-ic">'+icon('users',16)+'</div><p class="tm b6 ct">'+l.notifGroup+'</p></div><button class="tgl'+(s.notifGroup?' on':'')+'" id="tg"></button></div></div>'+
     '<p class="slbl" style="text-align:'+ta()+'">'+l.profileSection+'</p>'+
-    '<div class="cd"><div class="srow"><p class="tm b6 ct">👤  '+l.nameLabel+'</p><p class="tb cm b6">'+l.nameVal+'</p></div>'+
-    '<div class="srow"><p class="tm b6 ct">📱  '+l.phoneLabel2+'</p><p class="tb cm b6" dir="ltr">'+(state.loginPhone||'0512345678')+'</p></div>'+
-    '<div class="srow"><p class="tm b6 ct">ℹ️  '+l.versionLabel+'</p><p class="tb cm">1.0.0</p></div></div>'+
-    '<button id="blo" class="bd" style="margin-top:4px">'+l.logoutBtn+'</button></div></div>';
+    '<div class="cd"><div class="srow"><div class="f row g10 ac" style="'+(isA()?'flex-direction:row-reverse;':'')+'"><div class="srow-ic">'+icon('user',16)+'</div><p class="tm b6 ct">'+l.nameLabel+'</p></div><p class="tb cm b6">'+l.nameVal+'</p></div>'+
+    '<div class="srow"><div class="f row g10 ac" style="'+(isA()?'flex-direction:row-reverse;':'')+'"><div class="srow-ic">'+icon('phone',16)+'</div><p class="tm b6 ct">'+l.phoneLabel2+'</p></div><p class="tb cm b6" dir="ltr">'+(state.loginPhone||'0512345678')+'</p></div>'+
+    '<div class="srow"><div class="f row g10 ac" style="'+(isA()?'flex-direction:row-reverse;':'')+'"><div class="srow-ic">'+icon('info',16)+'</div><p class="tm b6 ct">'+l.versionLabel+'</p></div><p class="tb cm">1.0.0</p></div></div>'+
+    '<button id="blo" class="bd f row g8 ac jc" style="'+(isA()?'flex-direction:row-reverse;':'')+'margin-top:4px">'+icon('logout',16)+l.logoutBtn+'</button></div></div>';
 
   on('sla','click',function(){applySet(Object.assign({},state.settings,{lang:'ar'}))});
   on('sle','click',function(){applySet(Object.assign({},state.settings,{lang:'en'}))});
@@ -1066,10 +1333,10 @@ function applySet(s){saveSettings(s);setState({settings:s})}
 function renderNav(){
   if(state.phase!=='app'){$nav.className='';return;}
   $nav.className='show';
-  var l=tt(),tabs=[{id:'circles',icon:'🏠',label:l.navCircles},{id:'create',icon:'➕',label:l.navCreate},{id:'settings',icon:'⚙️',label:l.navSettings}];
-  var h='';tabs.forEach(function(tb){h+='<button class="ni'+(state.tab===tb.id?' on':'')+'" data-t="'+tb.id+'"><span class="ni-i">'+tb.icon+'</span><span class="ni-l">'+tb.label+'</span><span class="ni-d"></span></button>'});
+  var l=tt(),tabs=[{id:'circles',icon:'home',label:l.navCircles},{id:'create',icon:'plus',label:l.navCreate},{id:'settings',icon:'settings',label:l.navSettings}];
+  var h='';tabs.forEach(function(tb){h+='<button class="ni'+(state.tab===tb.id?' on':'')+'" data-t="'+tb.id+'"><span class="ni-i">'+icon(tb.icon,22)+'</span><span class="ni-l">'+tb.label+'</span><span class="ni-d"></span></button>'});
   $nav.innerHTML=h;
-  qa('.ni').forEach(function(btn){btn.addEventListener('click',function(){setState({tab:btn.dataset.t,activeCircleId:null,createStep:1,notifView:false,payMode:'off'})})});
+  qa('.ni').forEach(function(btn){btn.addEventListener('click',function(){setState({tab:btn.dataset.t,activeCircleId:null,createStep:1,notifView:false,payMode:'off',contractView:'off'})})});
 }
 
 // ═══════════════════════════════════════════════════════════

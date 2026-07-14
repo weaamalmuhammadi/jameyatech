@@ -7,7 +7,24 @@
   --red:#B91C1C;--red-bg:#FEE2E2;
   --blue:#1D4ED8;--blue-bg:#DBEAFE;
   --purple:#8D6BB8;--purple-bg:#EFE9F5;
+  --ai:#0F766E;--ai-bg:#E6F5F3;--ai-border:rgba(15,118,110,.22);
   --sc:1;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-dark:#0B1420;--primary:#3E6FA8;--primary-lt:rgba(62,111,168,.18);
+    --gold:#D6A876;--gold-lt:rgba(214,168,118,.16);
+    --bg:#0E151D;--card:#182430;--text:#EEF2F6;--muted:#8C9AAA;--border:#2A3846;
+    --green:#4ADE80;--green-bg:rgba(74,222,128,.14);
+    --yellow:#FBBF24;--yellow-bg:rgba(251,191,36,.14);
+    --red:#F87171;--red-bg:rgba(248,113,113,.14);
+    --blue:#60A5FA;--blue-bg:rgba(96,165,250,.14);
+    --purple:#C9AEEA;--purple-bg:rgba(201,174,234,.14);
+    --ai:#5EEAD4;--ai-bg:rgba(94,234,212,.12);--ai-border:rgba(94,234,212,.28);
+  }
+  #root{box-shadow:0 0 60px rgba(0,0,0,.6)}
+  .logo-ic,.brand-ic{box-shadow:0 8px 24px rgba(0,0,0,.5)}
 }
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -48,7 +65,8 @@ p{margin:0}
 .hdr h1{color:#fff;font-size:calc(24px*var(--sc));font-weight:900;margin:0 0 4px}
 .hdr .hsub{color:rgba(255,255,255,.65);font-size:calc(13px*var(--sc))}
 .hdr .htop{color:rgba(255,255,255,.5);font-size:calc(12px*var(--sc));margin-bottom:3px}
-.bbk{display:inline-block;background:rgba(255,255,255,.15);border-radius:10px;padding:8px 14px;color:#fff;font-size:calc(13px*var(--sc));font-weight:700;margin-bottom:14px}
+.bbk{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border-radius:10px;padding:8px 14px;color:#fff;font-size:calc(13px*var(--sc));font-weight:700;margin-bottom:14px}
+[dir=rtl] .bbk{flex-direction:row-reverse}
 .bbk:hover{background:rgba(255,255,255,.22)}
 .bell-btn{position:relative;font-size:16px;padding:2px}
 .bell-dot{position:absolute;top:0;right:0;width:8px;height:8px;border-radius:50%;background:var(--gold);border:1.5px solid var(--primary-dark)}
@@ -197,3 +215,79 @@ p{margin:0}
 /* Date display */
 .date-display{background:var(--primary-lt);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px}
 [dir=rtl] .date-display{flex-direction:row-reverse}
+
+/* ═══ Icons ═══ */
+.ic{display:inline-block;vertical-align:-0.15em;flex-shrink:0}
+[dir=ltr] .ic-back{transform:scaleX(-1)}
+.ic-circ{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* ═══ Focus states ═══ */
+button:focus-visible,input:focus-visible,.cd-click:focus-visible{outline:2.5px solid var(--primary);outline-offset:2px}
+.tgl:focus-visible{outline-offset:3px}
+
+/* ═══ Skeleton loader ═══ */
+@keyframes shimmer{0%{background-position:-120% 0}100%{background-position:120% 0}}
+.skel-row{height:13px;border-radius:6px;margin-bottom:8px;background:linear-gradient(90deg,var(--border) 25%,var(--primary-lt) 50%,var(--border) 75%);background-size:250% 100%;animation:shimmer 1.3s ease-in-out infinite}
+.skel-row:last-child{margin-bottom:0}
+.skel-wrap{padding:14px 16px;border-radius:16px;background:var(--card);border:1px solid var(--border)}
+
+/* ═══ AI Agent card (Risk / Turn / Yield / Mediator — one shared visual language) ═══ */
+.cd-ai{background:var(--ai-bg);border:1.5px solid var(--ai-border);border-radius:16px;padding:16px;margin-top:12px;animation:slideIn .2s ease}
+.ai-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+[dir=rtl] .ai-head{flex-direction:row-reverse}
+.ai-ic{width:32px;height:32px;border-radius:10px;background:var(--ai);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ai-name{font-size:calc(13px*var(--sc));font-weight:800;color:var(--ai)}
+.ai-time{font-size:calc(11px*var(--sc));color:var(--muted)}
+.ai-verdict{border-radius:12px;padding:10px 12px;margin-bottom:8px;font-weight:800;font-size:calc(14px*var(--sc))}
+.ai-verdict.gr{background:var(--green-bg);color:var(--green)}
+.ai-verdict.yl{background:var(--yellow-bg);color:var(--yellow)}
+.ai-verdict.rd{background:var(--red-bg);color:var(--red)}
+.ai-review{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:calc(12px*var(--sc));font-weight:700;color:var(--ai);background:none;border:none;padding:0}
+.ai-review:hover{text-decoration:underline}
+
+/* ═══ Trust badge (Nafath / Shariah / Alinma marks) ═══ */
+.trust-badge{display:inline-flex;align-items:center;gap:7px;background:var(--primary-lt);color:var(--primary);border-radius:20px;padding:6px 14px 6px 8px;font-size:calc(12px*var(--sc));font-weight:700}
+[dir=rtl] .trust-badge{padding:6px 8px 6px 14px}
+.trust-badge .ic-circ{width:22px;height:22px;background:var(--primary);color:#fff}
+.trust-row{display:flex;flex-wrap:wrap;gap:8px}
+
+/* ═══ Value strip (onboarding value props) ═══ */
+.vstrip{display:flex;flex-direction:column;gap:10px;width:100%;margin-bottom:30px}
+.vchip{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 14px;box-shadow:0 2px 8px rgba(30,58,95,.05)}
+[dir=rtl] .vchip{flex-direction:row-reverse}
+.vchip .ic-circ{width:36px;height:36px;background:var(--primary-lt);color:var(--primary)}
+.vchip p{color:var(--text);font-size:calc(12.5px*var(--sc));font-weight:600}
+
+/* ═══ Activity timeline (Orchestrator visibility) ═══ */
+.timeline{position:relative;padding:0}
+.tl-item{position:relative;display:flex;gap:12px;padding-bottom:18px}
+[dir=rtl] .tl-item{flex-direction:row-reverse}
+.tl-item:last-child{padding-bottom:0}
+.tl-item::before{content:'';position:absolute;top:26px;bottom:0;width:2px;background:var(--border)}
+[dir=ltr] .tl-item::before{left:13px}
+[dir=rtl] .tl-item::before{right:13px}
+.tl-item:last-child::before{display:none}
+.tl-dot{width:27px;height:27px;border-radius:50%;background:var(--ai-bg);color:var(--ai);display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1}
+.tl-body{flex:1;text-align:start}
+.tl-txt{font-size:calc(13px*var(--sc));font-weight:700;color:var(--text)}
+.tl-time{font-size:calc(11px*var(--sc));color:var(--muted);margin-top:2px}
+
+/* ═══ Contract card ═══ */
+.contract-card{background:var(--card);border:1.5px dashed var(--border);border-radius:18px;padding:20px}
+.contract-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:calc(13px*var(--sc))}
+[dir=rtl] .contract-row{flex-direction:row-reverse}
+.contract-row:last-child{border-bottom:none}
+.contract-signed{display:flex;align-items:center;gap:8px;background:var(--green-bg);color:var(--green);border-radius:12px;padding:10px 14px;font-weight:800;font-size:calc(13px*var(--sc));margin-top:14px}
+[dir=rtl] .contract-signed{flex-direction:row-reverse}
+
+/* ═══ Payment breakdown ═══ */
+.brk{background:var(--bg);border-radius:14px;padding:4px 16px}
+.brk-row{display:flex;justify-content:space-between;padding:11px 0;font-size:calc(13px*var(--sc));color:var(--muted);border-bottom:1px solid var(--border)}
+[dir=rtl] .brk-row{flex-direction:row-reverse}
+.brk-row:last-child{border-bottom:none;color:var(--text);font-weight:800;font-size:calc(15px*var(--sc))}
+
+/* ═══ Empty state ═══ */
+.empty-ic{width:72px;height:72px;border-radius:50%;background:var(--primary-lt);color:var(--primary);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+
+/* ═══ Settings row icon ═══ */
+.srow-ic{width:34px;height:34px;border-radius:10px;background:var(--primary-lt);color:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0}
