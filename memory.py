@@ -50,10 +50,13 @@ class JamiyaMemory:
         )
 
     # ----------------------------------------------------------- writers --
-    def log_risk_assessment(self, name: str, risk_level: str, reason: str) -> None:
-        self._member(name)["risk_history"].append(
-            {"ts": datetime.now(timezone.utc).isoformat(), "risk_level": risk_level, "reason": reason}
-        )
+    def log_risk_assessment(
+        self, name: str, risk_level: str, reason: str, trust_score: Optional[int] = None
+    ) -> None:
+        entry = {"ts": datetime.now(timezone.utc).isoformat(), "risk_level": risk_level, "reason": reason}
+        if trust_score is not None:
+            entry["trust_score"] = trust_score
+        self._member(name)["risk_history"].append(entry)
         self._save()
 
     def log_turn_assignment(self, name: str, month: int, reason: str) -> None:

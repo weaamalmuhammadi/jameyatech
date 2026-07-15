@@ -1,12 +1,37 @@
 import os
 import json
-import re
 from typing import Optional
 from groq import Groq
 
 from memory import JamiyaMemory
+from agent_utils import call_llm_json
 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+
+# ASCII (Latin/JSON syntax) + Arabic + Arabic Supplement code point ranges.
+# Expressed as integer bounds (not a literal regex char class) so the
+# ranges can't get mangled by text-encoding round-trips.
+_ALLOWED_RANGES = ((0x0000, 0x007F), (0x0600, 0x06FF), (0x0750, 0x077F))
+
+
+def _scrub_non_arabic(raw: str) -> str:
+    """Remove any stray non-Arabic/non-Latin characters (e.g. Chinese glyphs)."""
+    return ''.join(ch for ch in raw if any(lo <= ord(ch) <= hi for lo, hi in _ALLOWED_RANGES))
+
+
+def _fallback_mediation(amount_due) -> dict:
+    return {
+        "message_to_member": "لاحظنا تأخراً في دفعة هذا الشهر. نتفهم أن الظروف قد تتغير، ونود التواصل معك لإيجاد حل مناسب.",
+        "restructuring_options": [
+            "دفع المبلغ المتأخر خلال أسبوع إضافي",
+            "تقسيط المبلغ على الدفعتين القادمتين",
+            "تأجيل الدور إلى نهاية الجمعية مقابل تسوية المبلغ",
+        ],
+        "draft_contract_note": (
+            "سيتم توثيق اتفاق إعادة الجدولة "
+            f"على مبلغ {amount_due} ريال بعد اختيار العضو للخيار المناسب."
+        ),
+    }
 
 
 def mediate_missed_payment(member_data: dict, memory: Optional[JamiyaMemory] = None) -> dict:
@@ -65,22 +90,18 @@ Respond ONLY with valid JSON in this exact format, nothing else:
 }
 """
 
-    response = client.chat.completions.create(
+    amount_due = member_data.get("amount_due", "")
+    result = call_llm_json(
+        client,
         model="llama-3.3-70b-versatile",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
         ],
         temperature=0.4,
+        fallback=_fallback_mediation(amount_due),
+        postprocess=_scrub_non_arabic,
     )
-
-    raw = response.choices[0].message.content.strip()
-    raw = raw.replace("```json", "").replace("```", "").strip()
-
-    # Remove any stray non-Arabic/non-Latin characters (e.g. Chinese glyphs)
-    raw = re.sub(r'[^\u0000-\u007F\u0600-\u06FF\u0750-\u077F\s\d\{\}\[\]\"\'\:\,\.\!\?\-\_\(\)]', '', raw)
-
-    result = json.loads(raw)
 
     if memory:
         memory.log_payment_event(name, "missed")

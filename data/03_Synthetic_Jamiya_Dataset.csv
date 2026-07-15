@@ -1,151 +1,151 @@
-﻿Member_ID,Member_Name,Age,Monthly_Salary_SAR,Salary_Date,Monthly_Contribution_SAR,Contribution_Ratio,Membership_Years,Payment_Months_Observed,On_Time_Payments,Late_Payments,Missed_Payments,Previous_Default,Trust_Score,Risk_Label,Eligible_For_Turn,Current_Turn,Risk_Reason,Recommended_Action,Source_Credit_Grade,Source_Loan_Status,Source_Loan_Purpose
-JMY-0116,Faisal Al-Rashidi,28,5833,1,500,0.09,7,12,11,1,0,No,98,Green,Yes,1,minor late payments,Approve and prioritize normal turn allocation,A,1,DEBTCONSOLIDATION
-JMY-0059,Majed Al-Mutairi,31,4167,1,500,0.12,7,12,12,0,0,No,98,Green,Yes,2,stable payment profile,Approve and prioritize normal turn allocation,A,0,MEDICAL
-JMY-0085,Yousef Al-Qahtani,24,3800,1,650,0.17,4,12,11,1,0,No,98,Green,Yes,3,minor late payments,Approve and prioritize normal turn allocation,C,1,VENTURE
-JMY-0018,Fahad Al-Bishi,32,7200,25,600,0.08,7,12,12,0,0,No,98,Green,Yes,4,stable payment profile,Approve and prioritize normal turn allocation,A,0,VENTURE
-JMY-0022,Turki Al-Shehri,41,22333,25,1800,0.08,10,12,12,0,0,No,98,Green,Yes,5,stable payment profile,Approve and prioritize normal turn allocation,B,0,PERSONAL
-JMY-0030,Saleh Al-Zahrani,32,20000,25,1600,0.08,6,12,12,0,0,No,98,Green,Yes,6,stable payment profile,Approve and prioritize normal turn allocation,A,0,MEDICAL
-JMY-0038,Weam Al-Shammari,23,6099,25,500,0.08,2,12,11,1,0,No,98,Green,Yes,7,minor late payments,Approve and prioritize normal turn allocation,B,1,MEDICAL
-JMY-0055,Yousef Al-Qahtani,24,8250,25,650,0.08,4,12,12,0,0,No,98,Green,Yes,8,stable payment profile,Approve and prioritize normal turn allocation,A,0,DEBTCONSOLIDATION
-JMY-0062,Noura Al-Dosari,31,11250,25,900,0.08,9,12,12,0,0,No,98,Green,Yes,9,stable payment profile,Approve and prioritize normal turn allocation,B,0,MEDICAL
-JMY-0072,Munirah Al-Otaibi,22,6000,25,500,0.08,2,12,12,0,0,No,98,Green,Yes,10,stable payment profile,Approve and prioritize normal turn allocation,A,0,EDUCATION
-JMY-0106,Mohammed Al-Dhafairi,32,8417,25,650,0.08,5,12,12,0,0,No,98,Green,Yes,11,stable payment profile,Approve and prioritize normal turn allocation,B,0,DEBTCONSOLIDATION
-JMY-0126,Maha Al-Harbi,32,15667,25,1250,0.08,5,12,11,1,0,No,98,Green,Yes,12,minor late payments,Approve and prioritize normal turn allocation,B,1,DEBTCONSOLIDATION
-JMY-0135,Dana Al-Zahrani,28,6858,25,550,0.08,6,12,12,0,0,No,98,Green,Yes,13,stable payment profile,Approve and prioritize normal turn allocation,A,0,VENTURE
-JMY-0147,Abdulaziz Al-Otaibi,34,5883,25,500,0.08,9,12,12,0,0,No,98,Green,Yes,14,stable payment profile,Approve and prioritize normal turn allocation,B,0,DEBTCONSOLIDATION
-JMY-0150,Saleh Al-Zahrani,24,11250,25,900,0.08,3,12,12,0,0,No,98,Green,Yes,15,stable payment profile,Approve and prioritize normal turn allocation,B,0,HOMEIMPROVEMENT
-JMY-0077,Abdullah Al-Dosari,23,5833,25,500,0.09,4,12,12,0,0,No,98,Green,Yes,16,stable payment profile,Approve and prioritize normal turn allocation,A,0,PERSONAL
-JMY-0110,Saad Al-Yami,29,5833,25,500,0.09,5,12,12,0,0,No,98,Green,Yes,17,stable payment profile,Approve and prioritize normal turn allocation,A,0,EDUCATION
-JMY-0026,Faisal Al-Rashidi,22,7917,25,850,0.11,4,12,12,0,0,No,98,Green,Yes,18,stable payment profile,Approve and prioritize normal turn allocation,A,0,DEBTCONSOLIDATION
-JMY-0143,Sultan Al-Shammari,22,4458,25,500,0.11,3,12,12,0,0,No,98,Green,Yes,19,stable payment profile,Approve and prioritize normal turn allocation,B,0,EDUCATION
-JMY-0008,Weam Al-Shammari,29,4225,25,500,0.12,8,12,12,0,0,No,98,Green,Yes,20,stable payment profile,Approve and prioritize normal turn allocation,B,0,HOMEIMPROVEMENT
-JMY-0010,Abeer Al-Qahtani,22,4333,25,500,0.12,3,12,12,0,0,No,98,Green,Yes,21,stable payment profile,Approve and prioritize normal turn allocation,B,0,EDUCATION
-JMY-0017,Abdullah Al-Dosari,22,4249,25,500,0.12,2,12,12,0,0,No,98,Green,Yes,22,stable payment profile,Approve and prioritize normal turn allocation,C,0,EDUCATION
-JMY-0046,Mohammed Al-Dhafairi,31,4083,25,500,0.12,9,12,10,2,0,No,98,Green,Yes,23,minor late payments,Approve and prioritize normal turn allocation,B,1,HOMEIMPROVEMENT
-JMY-0070,Abeer Al-Qahtani,34,10000,25,1200,0.12,6,12,12,0,0,No,98,Green,Yes,24,stable payment profile,Approve and prioritize normal turn allocation,B,0,VENTURE
-JMY-0117,Abdulaziz Al-Otaibi,24,4167,25,500,0.12,3,12,12,0,0,No,98,Green,Yes,25,stable payment profile,Approve and prioritize normal turn allocation,A,0,HOMEIMPROVEMENT
-JMY-0067,Shahad Al-Shehri,30,6417,25,850,0.13,8,12,11,1,0,No,98,Green,Yes,26,minor late payments,Approve and prioritize normal turn allocation,B,1,PERSONAL
-JMY-0080,Saad Al-Yami,22,5083,25,650,0.13,4,12,12,0,0,No,98,Green,Yes,27,stable payment profile,Approve and prioritize normal turn allocation,A,0,MEDICAL
-JMY-0081,Nasser Al-Harbi,27,3917,25,500,0.13,5,12,12,0,0,No,98,Green,Yes,28,stable payment profile,Approve and prioritize normal turn allocation,B,0,PERSONAL
-JMY-0084,Bader Al-Subaie,30,4167,25,550,0.13,7,12,12,0,0,No,98,Green,Yes,29,stable payment profile,Approve and prioritize normal turn allocation,B,0,PERSONAL
-JMY-0119,Majed Al-Mutairi,28,4167,25,550,0.13,8,12,12,0,0,No,98,Green,Yes,30,stable payment profile,Approve and prioritize normal turn allocation,A,0,PERSONAL
-JMY-0099,Rafa Al-Subaie,26,3250,25,500,0.15,2,12,12,0,0,No,98,Green,Yes,31,stable payment profile,Approve and prioritize normal turn allocation,A,0,DEBTCONSOLIDATION
-JMY-0104,Hessa Al-Mutairi,31,3100,25,500,0.16,6,12,12,0,0,No,98,Green,Yes,32,stable payment profile,Approve and prioritize normal turn allocation,A,0,DEBTCONSOLIDATION
-JMY-0115,Yousef Al-Qahtani,22,3200,25,500,0.16,2,12,12,0,0,No,98,Green,Yes,33,stable payment profile,Approve and prioritize normal turn allocation,B,0,EDUCATION
-JMY-0042,Munirah Al-Otaibi,26,3000,25,500,0.17,4,12,12,0,0,No,98,Green,Yes,34,stable payment profile,Approve and prioritize normal turn allocation,A,0,MEDICAL
-JMY-0025,Yousef Al-Qahtani,22,2750,25,500,0.18,3,12,11,1,0,No,98,Green,Yes,35,minor late payments,Approve and prioritize normal turn allocation,B,1,PERSONAL
-JMY-0052,Turki Al-Shehri,25,2500,25,500,0.2,3,12,12,0,0,No,98,Green,Yes,36,stable payment profile,Approve and prioritize normal turn allocation,B,0,PERSONAL
-JMY-0125,Lama Al-Yami,26,2500,25,500,0.2,3,12,12,0,0,No,98,Green,Yes,37,stable payment profile,Approve and prioritize normal turn allocation,B,0,DEBTCONSOLIDATION
-JMY-0148,Rakan Al-Ghamdi,36,2240,25,500,0.22,10,12,12,0,0,No,98,Green,Yes,38,stable payment profile,Approve and prioritize normal turn allocation,A,0,MEDICAL
-JMY-0009,Rafa Al-Subaie,23,6250,27,500,0.08,2,12,12,0,0,No,98,Green,Yes,39,stable payment profile,Approve and prioritize normal turn allocation,A,0,EDUCATION
-JMY-0013,Nouf Al-Ghamdi,25,7167,27,550,0.08,2,12,12,0,0,No,98,Green,Yes,40,stable payment profile,Approve and prioritize normal turn allocation,D,0,HOMEIMPROVEMENT
-JMY-0023,Sultan Al-Shammari,24,12333,27,1000,0.08,2,12,12,0,0,No,98,Green,Yes,41,stable payment profile,Approve and prioritize normal turn allocation,A,0,HOMEIMPROVEMENT
-JMY-0034,Sara Al-Anazi,23,8306,27,650,0.08,4,12,12,0,0,No,98,Green,Yes,42,stable payment profile,Approve and prioritize normal turn allocation,D,0,PERSONAL
-JMY-0047,Abdullah Al-Dosari,29,6667,27,550,0.08,9,12,12,0,0,No,98,Green,Yes,43,stable payment profile,Approve and prioritize normal turn allocation,B,0,PERSONAL
-JMY-0086,Faisal Al-Rashidi,22,6000,27,500,0.08,4,12,12,0,0,No,98,Green,Yes,44,stable payment profile,Approve and prioritize normal turn allocation,A,0,EDUCATION
-JMY-0089,Majed Al-Mutairi,23,7296,27,600,0.08,3,12,10,2,0,No,98,Green,Yes,45,minor late payments,Approve and prioritize normal turn allocation,A,1,MEDICAL
-JMY-0097,Shahad Al-Shehri,27,6667,27,550,0.08,6,12,12,0,0,No,98,Green,Yes,46,stable payment profile,Approve and prioritize normal turn allocation,A,0,EDUCATION
-JMY-0130,Abeer Al-Qahtani,22,8000,27,650,0.08,3,12,12,0,0,No,98,Green,Yes,47,stable payment profile,Approve and prioritize normal turn allocation,A,0,EDUCATION
-JMY-0133,Nouf Al-Ghamdi,40,9167,27,750,0.08,10,12,12,0,0,No,98,Green,Yes,48,stable payment profile,Approve and prioritize normal turn allocation,B,0,HOMEIMPROVEMENT
-JMY-0136,Mohammed Al-Dhafairi,26,10583,27,850,0.08,3,12,12,0,0,No,98,Green,Yes,49,stable payment profile,Approve and prioritize normal turn allocation,A,0,EDUCATION
-JMY-0140,Saad Al-Yami,25,10500,27,850,0.08,3,12,12,0,0,No,98,Green,Yes,50,stable payment profile,Approve and prioritize normal turn allocation,A,0,EDUCATION
-JMY-0141,Nasser Al-Harbi,24,6667,27,550,0.08,4,12,12,0,0,No,98,Green,Yes,51,stable payment profile,Approve and prioritize normal turn allocation,B,0,PERSONAL
-JMY-0044,Hessa Al-Mutairi,25,5500,27,500,0.09,2,12,12,0,0,No,98,Green,Yes,52,stable payment profile,Approve and prioritize normal turn allocation,B,0,HOMEIMPROVEMENT
-JMY-0028,Rakan Al-Ghamdi,24,5000,27,500,0.1,2,12,12,0,0,No,98,Green,Yes,53,stable payment profile,Approve and prioritize normal turn allocation,B,0,VENTURE
-JMY-0082,Turki Al-Shehri,33,5000,27,500,0.1,7,12,12,0,0,No,98,Green,Yes,54,stable payment profile,Approve and prioritize normal turn allocation,A,0,DEBTCONSOLIDATION
-JMY-0111,Nasser Al-Harbi,24,8417,27,850,0.1,3,12,12,0,0,No,98,Green,Yes,55,stable payment profile,Approve and prioritize normal turn allocation,B,0,VENTURE
-JMY-0109,Khalid Al-Anazi,24,4583,27,500,0.11,2,12,12,0,0,No,98,Green,Yes,56,stable payment profile,Approve and prioritize normal turn allocation,B,0,HOMEIMPROVEMENT
-JMY-0120,Saleh Al-Zahrani,23,4209,27,500,0.12,4,12,12,0,0,No,98,Green,Yes,57,stable payment profile,Approve and prioritize normal turn allocation,B,0,PERSONAL
-JMY-0051,Nasser Al-Harbi,23,8333,27,1200,0.14,3,12,12,0,0,No,98,Green,Yes,58,stable payment profile,Approve and prioritize normal turn allocation,D,0,PERSONAL
-JMY-0132,Munirah Al-Otaibi,27,4667,27,700,0.15,10,12,11,1,0,No,98,Green,Yes,59,minor late payments,Approve and prioritize normal turn allocation,B,1,HOMEIMPROVEMENT
-JMY-0037,Shahad Al-Shehri,39,3208,27,500,0.16,10,12,12,0,0,No,98,Green,Yes,60,stable payment profile,Approve and prioritize normal turn allocation,B,0,MEDICAL
-JMY-0015,Dana Al-Zahrani,27,2920,27,500,0.17,10,12,12,0,0,No,98,Green,Yes,61,stable payment profile,Approve and prioritize normal turn allocation,B,0,MEDICAL
-JMY-0050,Saad Al-Yami,25,2750,27,500,0.18,4,12,12,0,0,No,98,Green,Yes,62,stable payment profile,Approve and prioritize normal turn allocation,A,0,DEBTCONSOLIDATION
-JMY-0057,Abdulaziz Al-Otaibi,30,2583,27,500,0.19,8,12,11,1,0,No,98,Green,Yes,63,minor late payments,Approve and prioritize normal turn allocation,A,1,EDUCATION
-JMY-0076,Mohammed Al-Dhafairi,23,2583,27,500,0.19,2,12,12,0,0,No,98,Green,Yes,64,stable payment profile,Approve and prioritize normal turn allocation,B,0,VENTURE
-JMY-0121,Hajer Al-Dhafairi,26,2667,27,500,0.19,2,12,12,0,0,No,98,Green,Yes,65,stable payment profile,Approve and prioritize normal turn allocation,A,0,VENTURE
-JMY-0021,Nasser Al-Harbi,37,2500,27,500,0.2,10,12,12,0,0,No,98,Green,Yes,66,stable payment profile,Approve and prioritize normal turn allocation,D,0,EDUCATION
-JMY-0033,Reem Al-Bishi,35,8833,28,700,0.08,8,12,12,0,0,No,98,Green,Yes,67,stable payment profile,Approve and prioritize normal turn allocation,C,0,DEBTCONSOLIDATION
-JMY-0098,Weam Al-Shammari,31,9250,28,750,0.08,7,12,12,0,0,No,98,Green,Yes,68,stable payment profile,Approve and prioritize normal turn allocation,A,0,PERSONAL
-JMY-0012,Munirah Al-Otaibi,25,5567,28,500,0.09,4,12,11,1,0,No,98,Green,Yes,69,minor late payments,Approve and prioritize normal turn allocation,A,1,DEBTCONSOLIDATION
-JMY-0007,Shahad Al-Shehri,22,4792,28,500,0.1,4,12,12,0,0,No,98,Green,Yes,70,stable payment profile,Approve and prioritize normal turn allocation,B,0,DEBTCONSOLIDATION
-JMY-0105,Dana Al-Zahrani,24,4583,28,500,0.11,3,12,12,0,0,No,98,Green,Yes,71,stable payment profile,Approve and prioritize normal turn allocation,B,0,EDUCATION
-JMY-0075,Dana Al-Zahrani,22,4167,28,500,0.12,2,12,12,0,0,No,98,Green,Yes,72,stable payment profile,Approve and prioritize normal turn allocation,A,0,MEDICAL
-JMY-0094,Sara Al-Anazi,24,4067,28,500,0.12,2,12,12,0,0,No,98,Green,Yes,73,stable payment profile,Approve and prioritize normal turn allocation,A,0,DEBTCONSOLIDATION
-JMY-0101,Layan Al-Rashidi,27,4333,28,500,0.12,7,12,12,0,0,No,98,Green,Yes,74,stable payment profile,Approve and prioritize normal turn allocation,B,0,HOMEIMPROVEMENT
-JMY-0128,Weam Al-Shammari,31,3875,28,500,0.13,10,12,12,0,0,No,98,Green,Yes,75,stable payment profile,Approve and prioritize normal turn allocation,A,0,DEBTCONSOLIDATION
-JMY-0014,Hessa Al-Mutairi,24,3333,28,500,0.15,4,12,12,0,0,No,98,Green,Yes,76,stable payment profile,Approve and prioritize normal turn allocation,C,0,DEBTCONSOLIDATION
-JMY-0065,Lama Al-Yami,21,2947,28,500,0.17,2,12,12,0,0,No,98,Green,Yes,77,stable payment profile,Approve and prioritize normal turn allocation,C,0,DEBTCONSOLIDATION
-JMY-0108,Fahad Al-Bishi,26,2917,28,500,0.17,3,12,12,0,0,No,98,Green,Yes,78,stable payment profile,Approve and prioritize normal turn allocation,A,0,MEDICAL
-JMY-0073,Nouf Al-Ghamdi,35,2667,28,500,0.19,5,12,10,2,0,No,98,Green,Yes,79,minor late payments,Approve and prioritize normal turn allocation,A,1,DEBTCONSOLIDATION
-JMY-0145,Yousef Al-Qahtani,33,9667,30,750,0.08,9,12,12,0,0,No,98,Green,Yes,80,stable payment profile,Approve and prioritize normal turn allocation,C,0,MEDICAL
-JMY-0131,Layan Al-Rashidi,49,5400,30,500,0.09,10,12,11,1,0,No,98,Green,Yes,81,minor late payments,Approve and prioritize normal turn allocation,D,0,HOMEIMPROVEMENT
-JMY-0093,Reem Al-Bishi,31,4583,30,500,0.11,10,12,12,0,0,No,98,Green,Yes,82,stable payment profile,Approve and prioritize normal turn allocation,B,0,DEBTCONSOLIDATION
-JMY-0078,Fahad Al-Bishi,24,4167,30,500,0.12,2,12,12,0,0,No,98,Green,Yes,83,stable payment profile,Approve and prioritize normal turn allocation,C,0,PERSONAL
-JMY-0074,Hessa Al-Mutairi,29,2833,30,500,0.18,10,12,12,0,0,No,98,Green,Yes,84,stable payment profile,Approve and prioritize normal turn allocation,A,0,MEDICAL
-JMY-0024,Bader Al-Subaie,22,3083,1,550,0.18,4,12,10,2,0,No,96,Green,Yes,85,minor late payments,Approve and prioritize normal turn allocation,B,1,EDUCATION
-JMY-0079,Khalid Al-Anazi,25,2500,1,500,0.2,4,12,10,2,0,No,96,Green,Yes,86,minor late payments,Approve and prioritize normal turn allocation,B,1,VENTURE
-JMY-0003,Reem Al-Bishi,24,4997,25,500,0.1,4,12,10,2,0,No,96,Green,Yes,87,minor late payments,Approve and prioritize normal turn allocation,B,1,DEBTCONSOLIDATION
-JMY-0060,Saleh Al-Zahrani,30,2333,28,500,0.21,8,12,11,1,0,No,94,Green,Yes,88,minor late payments,Approve and prioritize normal turn allocation,C,1,DEBTCONSOLIDATION
-JMY-0090,Saleh Al-Zahrani,25,2083,28,500,0.24,2,12,11,1,0,No,94,Green,Yes,89,minor late payments; high contribution burden,Approve and prioritize normal turn allocation,A,0,VENTURE
-JMY-0001,Hajer Al-Dhafairi,26,2333,25,500,0.21,3,12,11,1,0,No,92,Green,Yes,90,minor late payments,Approve and prioritize normal turn allocation,B,1,PERSONAL
-JMY-0035,Lama Al-Yami,24,2667,25,500,0.19,3,12,10,2,0,No,91,Green,Yes,91,minor late payments,Approve and prioritize normal turn allocation,C,1,EDUCATION
-JMY-0045,Dana Al-Zahrani,26,2250,25,500,0.22,3,12,10,2,0,No,91,Green,Yes,92,minor late payments,Approve and prioritize normal turn allocation,A,1,DEBTCONSOLIDATION
-JMY-0146,Faisal Al-Rashidi,21,4354,25,500,0.11,2,12,10,2,0,No,89,Green,Yes,93,minor late payments,Approve and prioritize normal turn allocation,C,1,MEDICAL
-JMY-0041,Layan Al-Rashidi,29,9583,27,750,0.08,6,12,11,1,0,Yes,88,Green,Yes,94,previous default; minor late payments,Approve and prioritize normal turn allocation,C,0,EDUCATION
-JMY-0061,Hajer Al-Dhafairi,24,2333,27,500,0.21,3,12,10,2,0,No,88,Green,Yes,95,minor late payments,Approve and prioritize normal turn allocation,B,1,EDUCATION
-JMY-0091,Hajer Al-Dhafairi,25,8750,28,700,0.08,2,12,11,1,0,Yes,82,Green,Yes,96,previous default; minor late payments,Approve and prioritize normal turn allocation,C,0,VENTURE
-JMY-0134,Hessa Al-Mutairi,22,3542,28,500,0.14,4,12,11,1,0,Yes,80,Green,Yes,97,previous default; minor late payments,Approve and prioritize normal turn allocation,C,0,DEBTCONSOLIDATION
-JMY-0129,Rafa Al-Subaie,35,6500,25,500,0.08,6,12,9,3,0,No,96,Yellow,Conditional,98,repeated late payments,Approve conditionally with reminder and monitoring,C,1,PERSONAL
-JMY-0139,Khalid Al-Anazi,42,5242,25,500,0.1,10,12,9,3,0,No,96,Yellow,Conditional,99,repeated late payments,Approve conditionally with reminder and monitoring,C,1,MEDICAL
-JMY-0068,Weam Al-Shammari,42,3200,25,500,0.16,10,12,9,3,0,No,94,Yellow,Conditional,100,repeated late payments,Approve conditionally with reminder and monitoring,B,1,MEDICAL
-JMY-0064,Sara Al-Anazi,26,5242,25,600,0.11,3,12,9,3,0,No,92,Yellow,Conditional,101,repeated late payments,Approve conditionally with reminder and monitoring,C,1,MEDICAL
-JMY-0053,Sultan Al-Shammari,28,2774,25,500,0.18,5,12,9,3,0,No,90,Yellow,Conditional,102,repeated late payments,Approve conditionally with reminder and monitoring,C,1,DEBTCONSOLIDATION
-JMY-0087,Abdulaziz Al-Otaibi,26,2500,25,500,0.2,2,12,9,3,0,No,88,Yellow,Conditional,103,repeated late payments,Approve conditionally with reminder and monitoring,B,1,EDUCATION
-JMY-0069,Rafa Al-Subaie,23,3958,27,600,0.15,4,12,9,3,0,No,88,Yellow,Conditional,104,repeated late payments,Approve conditionally with reminder and monitoring,C,1,MEDICAL
-JMY-0118,Rakan Al-Ghamdi,23,4500,27,700,0.16,2,12,9,3,0,No,88,Yellow,Conditional,105,repeated late payments,Approve conditionally with reminder and monitoring,B,1,PERSONAL
-JMY-0144,Bader Al-Subaie,29,9000,25,850,0.09,9,12,9,2,1,No,86,Yellow,Conditional,106,minor late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,PERSONAL
-JMY-0142,Turki Al-Shehri,21,2167,25,500,0.23,4,12,9,3,0,No,86,Yellow,Conditional,107,repeated late payments; high contribution burden,Approve conditionally with reminder and monitoring,B,1,PERSONAL
-JMY-0049,Khalid Al-Anazi,37,6083,27,500,0.08,10,12,9,2,1,No,86,Yellow,Conditional,108,minor late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,DEBTCONSOLIDATION
-JMY-0016,Mohammed Al-Dhafairi,27,6000,28,850,0.14,10,12,9,2,1,No,86,Yellow,Conditional,109,minor late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,VENTURE
-JMY-0124,Sara Al-Anazi,25,6500,25,500,0.08,4,12,9,2,1,No,84,Yellow,Conditional,110,minor late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,DEBTCONSOLIDATION
-JMY-0056,Faisal Al-Rashidi,24,6583,27,550,0.08,2,12,10,1,1,No,84,Yellow,Conditional,111,minor late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,HOMEIMPROVEMENT
-JMY-0011,Layan Al-Rashidi,28,2833,30,500,0.18,9,12,10,1,1,No,84,Yellow,Conditional,112,minor late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,PERSONAL
-JMY-0043,Nouf Al-Ghamdi,30,12333,25,1000,0.08,8,12,9,2,1,No,82,Yellow,Conditional,113,minor late payments; missed payments; weak credit grade,Approve conditionally with reminder and monitoring,E,1,EDUCATION
-JMY-0113,Sultan Al-Shammari,24,5000,27,700,0.14,4,12,8,3,1,No,79,Yellow,Conditional,114,repeated late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,PERSONAL
-JMY-0123,Reem Al-Bishi,24,6500,25,650,0.1,2,12,10,1,1,No,78,Yellow,Conditional,115,minor late payments; missed payments; weak credit grade,Approve conditionally with reminder and monitoring,F,1,VENTURE
-JMY-0066,Maha Al-Harbi,37,6500,30,700,0.11,10,12,8,3,1,No,78,Yellow,Conditional,116,repeated late payments; missed payments; weak credit grade,Approve conditionally with reminder and monitoring,E,1,DEBTCONSOLIDATION
-JMY-0019,Khalid Al-Anazi,29,2600,25,500,0.19,6,12,10,2,0,Yes,77,Yellow,Conditional,117,previous default; minor late payments,Approve conditionally with reminder and monitoring,C,0,PERSONAL
-JMY-0039,Rafa Al-Subaie,23,7125,28,600,0.08,2,12,10,2,0,Yes,77,Yellow,Conditional,118,previous default; minor late payments,Approve conditionally with reminder and monitoring,C,0,EDUCATION
-JMY-0114,Bader Al-Subaie,40,2333,25,500,0.21,10,12,11,1,0,Yes,76,Yellow,Conditional,119,previous default; minor late payments,Approve conditionally with reminder and monitoring,C,0,VENTURE
-JMY-0083,Sultan Al-Shammari,22,5333,25,500,0.09,2,12,8,3,1,No,75,Yellow,Conditional,120,repeated late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,PERSONAL
-JMY-0102,Munirah Al-Otaibi,34,3000,25,500,0.17,10,12,8,3,1,No,75,Yellow,Conditional,121,repeated late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,VENTURE
-JMY-0040,Abeer Al-Qahtani,26,2500,25,500,0.2,4,12,9,2,1,No,74,Yellow,Conditional,122,minor late payments; missed payments; weak credit grade,Approve conditionally with reminder and monitoring,E,1,MEDICAL
-JMY-0006,Maha Al-Harbi,25,2500,28,500,0.2,2,12,9,2,1,No,74,Yellow,Conditional,123,minor late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,VENTURE
-JMY-0063,Reem Al-Bishi,23,8083,25,650,0.08,3,12,10,2,0,Yes,73,Yellow,Conditional,124,previous default; minor late payments; weak credit grade,Approve conditionally with reminder and monitoring,E,0,PERSONAL
-JMY-0020,Saad Al-Yami,23,3500,25,500,0.14,2,12,11,1,0,Yes,72,Yellow,Conditional,125,previous default; minor late payments,Approve conditionally with reminder and monitoring,D,0,EDUCATION
-JMY-0088,Rakan Al-Ghamdi,36,2000,27,500,0.25,10,12,8,3,1,No,72,Yellow,Conditional,126,repeated late payments; missed payments; high contribution burden,Approve conditionally with reminder and monitoring,C,1,DEBTCONSOLIDATION
-JMY-0005,Lama Al-Yami,22,2333,25,500,0.21,2,12,11,1,0,Yes,70,Yellow,Conditional,127,previous default; minor late payments,Approve conditionally with reminder and monitoring,C,0,EDUCATION
-JMY-0095,Lama Al-Yami,25,4042,27,700,0.17,4,12,8,3,1,No,70,Yellow,Conditional,128,repeated late payments; missed payments; weak credit grade,Approve conditionally with reminder and monitoring,E,1,EDUCATION
-JMY-0127,Shahad Al-Shehri,22,5958,27,500,0.08,2,12,10,1,1,Yes,69,Yellow,Conditional,129,previous default; minor late payments; missed payments,Approve conditionally with reminder and monitoring,C,0,EDUCATION
-JMY-0071,Layan Al-Rashidi,29,3333,27,500,0.15,7,12,10,1,1,Yes,69,Yellow,Conditional,130,previous default; minor late payments; missed payments,Approve conditionally with reminder and monitoring,C,0,DEBTCONSOLIDATION
-JMY-0103,Nouf Al-Ghamdi,29,3000,27,500,0.17,5,12,10,1,1,Yes,69,Yellow,Conditional,131,previous default; minor late payments; missed payments,Approve conditionally with reminder and monitoring,C,0,MEDICAL
-JMY-0027,Abdulaziz Al-Otaibi,22,10833,25,850,0.08,4,12,9,2,1,Yes,68,Yellow,Conditional,132,previous default; minor late payments; missed payments,Approve conditionally with reminder and monitoring,C,0,EDUCATION
-JMY-0112,Turki Al-Shehri,35,3333,25,500,0.15,5,12,9,2,1,Yes,64,Yellow,Conditional,133,previous default; minor late payments; missed payments,Approve conditionally with reminder and monitoring,C,0,DEBTCONSOLIDATION
-JMY-0092,Noura Al-Dosari,24,3250,25,700,0.22,2,12,8,3,1,No,63,Yellow,Conditional,134,repeated late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,MEDICAL
-JMY-0107,Abdullah Al-Dosari,22,4917,27,500,0.1,4,12,7,4,1,No,62,Yellow,Conditional,135,repeated late payments; missed payments; weak credit grade,Approve conditionally with reminder and monitoring,F,1,DEBTCONSOLIDATION
-JMY-0004,Sara Al-Anazi,25,3000,25,500,0.17,2,12,9,2,1,Yes,58,Yellow,Conditional,136,previous default; minor late payments; missed payments,Approve conditionally with reminder and monitoring,C,0,DEBTCONSOLIDATION
-JMY-0036,Maha Al-Harbi,21,2773,30,500,0.18,2,12,9,2,1,Yes,58,Yellow,Conditional,137,previous default; minor late payments; missed payments,Approve conditionally with reminder and monitoring,C,0,VENTURE
-JMY-0058,Rakan Al-Ghamdi,27,10000,25,800,0.08,7,12,9,3,0,Yes,72,Red,No,138,previous default; repeated late payments; weak credit grade,Require guarantor or defer participation,E,0,EDUCATION
-JMY-0137,Abdullah Al-Dosari,28,4083,27,500,0.12,9,12,9,3,0,Yes,72,Red,No,139,previous default; repeated late payments,Require guarantor or defer participation,C,1,VENTURE
-JMY-0100,Abeer Al-Qahtani,34,6083,27,500,0.08,5,12,7,4,1,Yes,58,Red,No,140,previous default; repeated late payments; missed payments,Require guarantor or defer participation,D,1,PERSONAL
-JMY-0138,Fahad Al-Bishi,39,25867,28,2050,0.08,10,12,7,4,1,Yes,58,Red,No,141,previous default; repeated late payments; missed payments,Require guarantor or defer participation,D,1,DEBTCONSOLIDATION
-JMY-0048,Fahad Al-Bishi,35,3667,25,550,0.15,8,12,7,4,1,Yes,56,Red,No,142,previous default; repeated late payments; missed payments,Require guarantor or defer participation,C,1,PERSONAL
-JMY-0031,Hajer Al-Dhafairi,24,2500,25,500,0.2,3,12,8,3,1,Yes,56,Red,No,143,previous default; repeated late payments; missed payments,Require guarantor or defer participation,C,1,HOMEIMPROVEMENT
-JMY-0149,Majed Al-Mutairi,29,5333,25,500,0.09,6,12,6,5,1,Yes,54,Red,No,144,previous default; repeated late payments; missed payments,Require guarantor or defer participation,D,1,DEBTCONSOLIDATION
-JMY-0122,Noura Al-Dosari,25,8333,28,750,0.09,3,12,7,4,1,Yes,54,Red,No,145,previous default; repeated late payments; missed payments,Require guarantor or defer participation,D,1,PERSONAL
-JMY-0029,Majed Al-Mutairi,30,9000,25,700,0.08,7,12,7,3,2,Yes,50,Red,No,146,previous default; repeated late payments; missed payments,Require guarantor or defer participation,D,1,PERSONAL
-JMY-0054,Bader Al-Subaie,29,2833,25,500,0.18,9,12,7,4,1,Yes,50,Red,No,147,previous default; repeated late payments; missed payments; weak credit grade,Require guarantor or defer participation,E,1,DEBTCONSOLIDATION
-JMY-0002,Noura Al-Dosari,24,6167,27,900,0.15,3,12,6,5,1,Yes,50,Red,No,148,previous default; repeated late payments; missed payments,Require guarantor or defer participation,D,1,DEBTCONSOLIDATION
-JMY-0096,Maha Al-Harbi,29,3667,27,500,0.14,8,12,7,3,2,Yes,44,Red,No,149,previous default; repeated late payments; missed payments,Require guarantor or defer participation,D,1,PERSONAL
-JMY-0032,Noura Al-Dosari,28,2083,28,500,0.24,6,12,6,4,2,Yes,28,Red,No,150,previous default; repeated late payments; missed payments; high contribution burden; weak credit grade,Require guarantor or defer participation,F,1,HOMEIMPROVEMENT
+﻿Member_ID,Member_Name,Phone,Age,Monthly_Salary_SAR,Salary_Date,Monthly_Contribution_SAR,Contribution_Ratio,Membership_Years,Payment_Months_Observed,On_Time_Payments,Late_Payments,Missed_Payments,Previous_Default,Trust_Score,Risk_Label,Eligible_For_Turn,Current_Turn,Risk_Reason,Recommended_Action,Source_Credit_Grade,Source_Loan_Status,Source_Loan_Purpose
+JMY-0116,Faisal Al-Rashidi,0510433218,28,5833,1,500,0.09,7,12,11,1,0,No,98,Green,Yes,1,minor late payments,Approve and prioritize normal turn allocation,A,1,DEBTCONSOLIDATION
+JMY-0059,Majed Al-Mutairi,0519600133,31,4167,1,500,0.12,7,12,12,0,0,No,98,Green,Yes,2,stable payment profile,Approve and prioritize normal turn allocation,A,0,MEDICAL
+JMY-0085,Yousef Al-Qahtani,0589083863,24,3800,1,650,0.17,4,12,11,1,0,No,98,Green,Yes,3,minor late payments,Approve and prioritize normal turn allocation,C,1,VENTURE
+JMY-0018,Fahad Al-Bishi,0579402654,32,7200,25,600,0.08,7,12,12,0,0,No,98,Green,Yes,4,stable payment profile,Approve and prioritize normal turn allocation,A,0,VENTURE
+JMY-0022,Turki Al-Shehri,0523511615,41,22333,25,1800,0.08,10,12,12,0,0,No,98,Green,Yes,5,stable payment profile,Approve and prioritize normal turn allocation,B,0,PERSONAL
+JMY-0030,Saleh Al-Zahrani,0559407816,32,20000,25,1600,0.08,6,12,12,0,0,No,98,Green,Yes,6,stable payment profile,Approve and prioritize normal turn allocation,A,0,MEDICAL
+JMY-0038,Weam Al-Shammari,0518495931,23,6099,25,500,0.08,2,12,11,1,0,No,98,Green,Yes,7,minor late payments,Approve and prioritize normal turn allocation,B,1,MEDICAL
+JMY-0055,Yousef Al-Qahtani,0503413164,24,8250,25,650,0.08,4,12,12,0,0,No,98,Green,Yes,8,stable payment profile,Approve and prioritize normal turn allocation,A,0,DEBTCONSOLIDATION
+JMY-0062,Noura Al-Dosari,0575255341,31,11250,25,900,0.08,9,12,12,0,0,No,98,Green,Yes,9,stable payment profile,Approve and prioritize normal turn allocation,B,0,MEDICAL
+JMY-0072,Munirah Al-Otaibi,0592832764,22,6000,25,500,0.08,2,12,12,0,0,No,98,Green,Yes,10,stable payment profile,Approve and prioritize normal turn allocation,A,0,EDUCATION
+JMY-0106,Mohammed Al-Dhafairi,0583503056,32,8417,25,650,0.08,5,12,12,0,0,No,98,Green,Yes,11,stable payment profile,Approve and prioritize normal turn allocation,B,0,DEBTCONSOLIDATION
+JMY-0126,Maha Al-Harbi,0541395376,32,15667,25,1250,0.08,5,12,11,1,0,No,98,Green,Yes,12,minor late payments,Approve and prioritize normal turn allocation,B,1,DEBTCONSOLIDATION
+JMY-0135,Dana Al-Zahrani,0572423884,28,6858,25,550,0.08,6,12,12,0,0,No,98,Green,Yes,13,stable payment profile,Approve and prioritize normal turn allocation,A,0,VENTURE
+JMY-0147,Abdulaziz Al-Otaibi,0596965328,34,5883,25,500,0.08,9,12,12,0,0,No,98,Green,Yes,14,stable payment profile,Approve and prioritize normal turn allocation,B,0,DEBTCONSOLIDATION
+JMY-0150,Saleh Al-Zahrani,0571012269,24,11250,25,900,0.08,3,12,12,0,0,No,98,Green,Yes,15,stable payment profile,Approve and prioritize normal turn allocation,B,0,HOMEIMPROVEMENT
+JMY-0077,Abdullah Al-Dosari,0516697848,23,5833,25,500,0.09,4,12,12,0,0,No,98,Green,Yes,16,stable payment profile,Approve and prioritize normal turn allocation,A,0,PERSONAL
+JMY-0110,Saad Al-Yami,0501845146,29,5833,25,500,0.09,5,12,12,0,0,No,98,Green,Yes,17,stable payment profile,Approve and prioritize normal turn allocation,A,0,EDUCATION
+JMY-0026,Faisal Al-Rashidi,0527048281,22,7917,25,850,0.11,4,12,12,0,0,No,98,Green,Yes,18,stable payment profile,Approve and prioritize normal turn allocation,A,0,DEBTCONSOLIDATION
+JMY-0143,Sultan Al-Shammari,0548932528,22,4458,25,500,0.11,3,12,12,0,0,No,98,Green,Yes,19,stable payment profile,Approve and prioritize normal turn allocation,B,0,EDUCATION
+JMY-0008,Weam Al-Shammari,0580957015,29,4225,25,500,0.12,8,12,12,0,0,No,98,Green,Yes,20,stable payment profile,Approve and prioritize normal turn allocation,B,0,HOMEIMPROVEMENT
+JMY-0010,Abeer Al-Qahtani,0543039117,22,4333,25,500,0.12,3,12,12,0,0,No,98,Green,Yes,21,stable payment profile,Approve and prioritize normal turn allocation,B,0,EDUCATION
+JMY-0017,Abdullah Al-Dosari,0518227824,22,4249,25,500,0.12,2,12,12,0,0,No,98,Green,Yes,22,stable payment profile,Approve and prioritize normal turn allocation,C,0,EDUCATION
+JMY-0046,Mohammed Al-Dhafairi,0589638346,31,4083,25,500,0.12,9,12,10,2,0,No,98,Green,Yes,23,minor late payments,Approve and prioritize normal turn allocation,B,1,HOMEIMPROVEMENT
+JMY-0070,Abeer Al-Qahtani,0557871331,34,10000,25,1200,0.12,6,12,12,0,0,No,98,Green,Yes,24,stable payment profile,Approve and prioritize normal turn allocation,B,0,VENTURE
+JMY-0117,Abdulaziz Al-Otaibi,0550983930,24,4167,25,500,0.12,3,12,12,0,0,No,98,Green,Yes,25,stable payment profile,Approve and prioritize normal turn allocation,A,0,HOMEIMPROVEMENT
+JMY-0067,Shahad Al-Shehri,0510310518,30,6417,25,850,0.13,8,12,11,1,0,No,98,Green,Yes,26,minor late payments,Approve and prioritize normal turn allocation,B,1,PERSONAL
+JMY-0080,Saad Al-Yami,0534738299,22,5083,25,650,0.13,4,12,12,0,0,No,98,Green,Yes,27,stable payment profile,Approve and prioritize normal turn allocation,A,0,MEDICAL
+JMY-0081,Nasser Al-Harbi,0573763116,27,3917,25,500,0.13,5,12,12,0,0,No,98,Green,Yes,28,stable payment profile,Approve and prioritize normal turn allocation,B,0,PERSONAL
+JMY-0084,Bader Al-Subaie,0556670106,30,4167,25,550,0.13,7,12,12,0,0,No,98,Green,Yes,29,stable payment profile,Approve and prioritize normal turn allocation,B,0,PERSONAL
+JMY-0119,Majed Al-Mutairi,0551333872,28,4167,25,550,0.13,8,12,12,0,0,No,98,Green,Yes,30,stable payment profile,Approve and prioritize normal turn allocation,A,0,PERSONAL
+JMY-0099,Rafa Al-Subaie,0562473178,26,3250,25,500,0.15,2,12,12,0,0,No,98,Green,Yes,31,stable payment profile,Approve and prioritize normal turn allocation,A,0,DEBTCONSOLIDATION
+JMY-0104,Hessa Al-Mutairi,0510801326,31,3100,25,500,0.16,6,12,12,0,0,No,98,Green,Yes,32,stable payment profile,Approve and prioritize normal turn allocation,A,0,DEBTCONSOLIDATION
+JMY-0115,Yousef Al-Qahtani,0577360260,22,3200,25,500,0.16,2,12,12,0,0,No,98,Green,Yes,33,stable payment profile,Approve and prioritize normal turn allocation,B,0,EDUCATION
+JMY-0042,Munirah Al-Otaibi,0564746872,26,3000,25,500,0.17,4,12,12,0,0,No,98,Green,Yes,34,stable payment profile,Approve and prioritize normal turn allocation,A,0,MEDICAL
+JMY-0025,Yousef Al-Qahtani,0534309805,22,2750,25,500,0.18,3,12,11,1,0,No,98,Green,Yes,35,minor late payments,Approve and prioritize normal turn allocation,B,1,PERSONAL
+JMY-0052,Turki Al-Shehri,0500978820,25,2500,25,500,0.2,3,12,12,0,0,No,98,Green,Yes,36,stable payment profile,Approve and prioritize normal turn allocation,B,0,PERSONAL
+JMY-0125,Lama Al-Yami,0581219136,26,2500,25,500,0.2,3,12,12,0,0,No,98,Green,Yes,37,stable payment profile,Approve and prioritize normal turn allocation,B,0,DEBTCONSOLIDATION
+JMY-0148,Rakan Al-Ghamdi,0519399091,36,2240,25,500,0.22,10,12,12,0,0,No,98,Green,Yes,38,stable payment profile,Approve and prioritize normal turn allocation,A,0,MEDICAL
+JMY-0009,Rafa Al-Subaie,0569985435,23,6250,27,500,0.08,2,12,12,0,0,No,98,Green,Yes,39,stable payment profile,Approve and prioritize normal turn allocation,A,0,EDUCATION
+JMY-0013,Nouf Al-Ghamdi,0534624751,25,7167,27,550,0.08,2,12,12,0,0,No,98,Green,Yes,40,stable payment profile,Approve and prioritize normal turn allocation,D,0,HOMEIMPROVEMENT
+JMY-0023,Sultan Al-Shammari,0507991183,24,12333,27,1000,0.08,2,12,12,0,0,No,98,Green,Yes,41,stable payment profile,Approve and prioritize normal turn allocation,A,0,HOMEIMPROVEMENT
+JMY-0034,Sara Al-Anazi,0584251354,23,8306,27,650,0.08,4,12,12,0,0,No,98,Green,Yes,42,stable payment profile,Approve and prioritize normal turn allocation,D,0,PERSONAL
+JMY-0047,Abdullah Al-Dosari,0527849808,29,6667,27,550,0.08,9,12,12,0,0,No,98,Green,Yes,43,stable payment profile,Approve and prioritize normal turn allocation,B,0,PERSONAL
+JMY-0086,Faisal Al-Rashidi,0541241182,22,6000,27,500,0.08,4,12,12,0,0,No,98,Green,Yes,44,stable payment profile,Approve and prioritize normal turn allocation,A,0,EDUCATION
+JMY-0089,Majed Al-Mutairi,0544935348,23,7296,27,600,0.08,3,12,10,2,0,No,98,Green,Yes,45,minor late payments,Approve and prioritize normal turn allocation,A,1,MEDICAL
+JMY-0097,Shahad Al-Shehri,0574016400,27,6667,27,550,0.08,6,12,12,0,0,No,98,Green,Yes,46,stable payment profile,Approve and prioritize normal turn allocation,A,0,EDUCATION
+JMY-0130,Abeer Al-Qahtani,0552427868,22,8000,27,650,0.08,3,12,12,0,0,No,98,Green,Yes,47,stable payment profile,Approve and prioritize normal turn allocation,A,0,EDUCATION
+JMY-0133,Nouf Al-Ghamdi,0501128059,40,9167,27,750,0.08,10,12,12,0,0,No,98,Green,Yes,48,stable payment profile,Approve and prioritize normal turn allocation,B,0,HOMEIMPROVEMENT
+JMY-0136,Mohammed Al-Dhafairi,0582620450,26,10583,27,850,0.08,3,12,12,0,0,No,98,Green,Yes,49,stable payment profile,Approve and prioritize normal turn allocation,A,0,EDUCATION
+JMY-0140,Saad Al-Yami,0553315869,25,10500,27,850,0.08,3,12,12,0,0,No,98,Green,Yes,50,stable payment profile,Approve and prioritize normal turn allocation,A,0,EDUCATION
+JMY-0141,Nasser Al-Harbi,0523226025,24,6667,27,550,0.08,4,12,12,0,0,No,98,Green,Yes,51,stable payment profile,Approve and prioritize normal turn allocation,B,0,PERSONAL
+JMY-0044,Hessa Al-Mutairi,0563421607,25,5500,27,500,0.09,2,12,12,0,0,No,98,Green,Yes,52,stable payment profile,Approve and prioritize normal turn allocation,B,0,HOMEIMPROVEMENT
+JMY-0028,Rakan Al-Ghamdi,0533754330,24,5000,27,500,0.1,2,12,12,0,0,No,98,Green,Yes,53,stable payment profile,Approve and prioritize normal turn allocation,B,0,VENTURE
+JMY-0082,Turki Al-Shehri,0536541458,33,5000,27,500,0.1,7,12,12,0,0,No,98,Green,Yes,54,stable payment profile,Approve and prioritize normal turn allocation,A,0,DEBTCONSOLIDATION
+JMY-0111,Nasser Al-Harbi,0568501429,24,8417,27,850,0.1,3,12,12,0,0,No,98,Green,Yes,55,stable payment profile,Approve and prioritize normal turn allocation,B,0,VENTURE
+JMY-0109,Khalid Al-Anazi,0540196556,24,4583,27,500,0.11,2,12,12,0,0,No,98,Green,Yes,56,stable payment profile,Approve and prioritize normal turn allocation,B,0,HOMEIMPROVEMENT
+JMY-0120,Saleh Al-Zahrani,0598169340,23,4209,27,500,0.12,4,12,12,0,0,No,98,Green,Yes,57,stable payment profile,Approve and prioritize normal turn allocation,B,0,PERSONAL
+JMY-0051,Nasser Al-Harbi,0560883561,23,8333,27,1200,0.14,3,12,12,0,0,No,98,Green,Yes,58,stable payment profile,Approve and prioritize normal turn allocation,D,0,PERSONAL
+JMY-0132,Munirah Al-Otaibi,0559514846,27,4667,27,700,0.15,10,12,11,1,0,No,98,Green,Yes,59,minor late payments,Approve and prioritize normal turn allocation,B,1,HOMEIMPROVEMENT
+JMY-0037,Shahad Al-Shehri,0556482366,39,3208,27,500,0.16,10,12,12,0,0,No,98,Green,Yes,60,stable payment profile,Approve and prioritize normal turn allocation,B,0,MEDICAL
+JMY-0015,Dana Al-Zahrani,0529946804,27,2920,27,500,0.17,10,12,12,0,0,No,98,Green,Yes,61,stable payment profile,Approve and prioritize normal turn allocation,B,0,MEDICAL
+JMY-0050,Saad Al-Yami,0543699577,25,2750,27,500,0.18,4,12,12,0,0,No,98,Green,Yes,62,stable payment profile,Approve and prioritize normal turn allocation,A,0,DEBTCONSOLIDATION
+JMY-0057,Abdulaziz Al-Otaibi,0573872148,30,2583,27,500,0.19,8,12,11,1,0,No,98,Green,Yes,63,minor late payments,Approve and prioritize normal turn allocation,A,1,EDUCATION
+JMY-0076,Mohammed Al-Dhafairi,0595134332,23,2583,27,500,0.19,2,12,12,0,0,No,98,Green,Yes,64,stable payment profile,Approve and prioritize normal turn allocation,B,0,VENTURE
+JMY-0121,Hajer Al-Dhafairi,0500379176,26,2667,27,500,0.19,2,12,12,0,0,No,98,Green,Yes,65,stable payment profile,Approve and prioritize normal turn allocation,A,0,VENTURE
+JMY-0021,Nasser Al-Harbi,0593676320,37,2500,27,500,0.2,10,12,12,0,0,No,98,Green,Yes,66,stable payment profile,Approve and prioritize normal turn allocation,D,0,EDUCATION
+JMY-0033,Reem Al-Bishi,0516328708,35,8833,28,700,0.08,8,12,12,0,0,No,98,Green,Yes,67,stable payment profile,Approve and prioritize normal turn allocation,C,0,DEBTCONSOLIDATION
+JMY-0098,Weam Al-Shammari,0531727889,31,9250,28,750,0.08,7,12,12,0,0,No,98,Green,Yes,68,stable payment profile,Approve and prioritize normal turn allocation,A,0,PERSONAL
+JMY-0012,Munirah Al-Otaibi,0557986872,25,5567,28,500,0.09,4,12,11,1,0,No,98,Green,Yes,69,minor late payments,Approve and prioritize normal turn allocation,A,1,DEBTCONSOLIDATION
+JMY-0007,Shahad Al-Shehri,0577434873,22,4792,28,500,0.1,4,12,12,0,0,No,98,Green,Yes,70,stable payment profile,Approve and prioritize normal turn allocation,B,0,DEBTCONSOLIDATION
+JMY-0105,Dana Al-Zahrani,0547143455,24,4583,28,500,0.11,3,12,12,0,0,No,98,Green,Yes,71,stable payment profile,Approve and prioritize normal turn allocation,B,0,EDUCATION
+JMY-0075,Dana Al-Zahrani,0581223623,22,4167,28,500,0.12,2,12,12,0,0,No,98,Green,Yes,72,stable payment profile,Approve and prioritize normal turn allocation,A,0,MEDICAL
+JMY-0094,Sara Al-Anazi,0516658760,24,4067,28,500,0.12,2,12,12,0,0,No,98,Green,Yes,73,stable payment profile,Approve and prioritize normal turn allocation,A,0,DEBTCONSOLIDATION
+JMY-0101,Layan Al-Rashidi,0536690967,27,4333,28,500,0.12,7,12,12,0,0,No,98,Green,Yes,74,stable payment profile,Approve and prioritize normal turn allocation,B,0,HOMEIMPROVEMENT
+JMY-0128,Weam Al-Shammari,0505466889,31,3875,28,500,0.13,10,12,12,0,0,No,98,Green,Yes,75,stable payment profile,Approve and prioritize normal turn allocation,A,0,DEBTCONSOLIDATION
+JMY-0014,Hessa Al-Mutairi,0537346706,24,3333,28,500,0.15,4,12,12,0,0,No,98,Green,Yes,76,stable payment profile,Approve and prioritize normal turn allocation,C,0,DEBTCONSOLIDATION
+JMY-0065,Lama Al-Yami,0556272980,21,2947,28,500,0.17,2,12,12,0,0,No,98,Green,Yes,77,stable payment profile,Approve and prioritize normal turn allocation,C,0,DEBTCONSOLIDATION
+JMY-0108,Fahad Al-Bishi,0569901627,26,2917,28,500,0.17,3,12,12,0,0,No,98,Green,Yes,78,stable payment profile,Approve and prioritize normal turn allocation,A,0,MEDICAL
+JMY-0073,Nouf Al-Ghamdi,0520465375,35,2667,28,500,0.19,5,12,10,2,0,No,98,Green,Yes,79,minor late payments,Approve and prioritize normal turn allocation,A,1,DEBTCONSOLIDATION
+JMY-0145,Yousef Al-Qahtani,0556464170,33,9667,30,750,0.08,9,12,12,0,0,No,98,Green,Yes,80,stable payment profile,Approve and prioritize normal turn allocation,C,0,MEDICAL
+JMY-0131,Layan Al-Rashidi,0580531003,49,5400,30,500,0.09,10,12,11,1,0,No,98,Green,Yes,81,minor late payments,Approve and prioritize normal turn allocation,D,0,HOMEIMPROVEMENT
+JMY-0093,Reem Al-Bishi,0530923271,31,4583,30,500,0.11,10,12,12,0,0,No,98,Green,Yes,82,stable payment profile,Approve and prioritize normal turn allocation,B,0,DEBTCONSOLIDATION
+JMY-0078,Fahad Al-Bishi,0593745299,24,4167,30,500,0.12,2,12,12,0,0,No,98,Green,Yes,83,stable payment profile,Approve and prioritize normal turn allocation,C,0,PERSONAL
+JMY-0074,Hessa Al-Mutairi,0512419049,29,2833,30,500,0.18,10,12,12,0,0,No,98,Green,Yes,84,stable payment profile,Approve and prioritize normal turn allocation,A,0,MEDICAL
+JMY-0024,Bader Al-Subaie,0566319314,22,3083,1,550,0.18,4,12,10,2,0,No,96,Green,Yes,85,minor late payments,Approve and prioritize normal turn allocation,B,1,EDUCATION
+JMY-0079,Khalid Al-Anazi,0591905865,25,2500,1,500,0.2,4,12,10,2,0,No,96,Green,Yes,86,minor late payments,Approve and prioritize normal turn allocation,B,1,VENTURE
+JMY-0003,Reem Al-Bishi,0518506716,24,4997,25,500,0.1,4,12,10,2,0,No,96,Green,Yes,87,minor late payments,Approve and prioritize normal turn allocation,B,1,DEBTCONSOLIDATION
+JMY-0060,Saleh Al-Zahrani,0557262849,30,2333,28,500,0.21,8,12,11,1,0,No,94,Green,Yes,88,minor late payments,Approve and prioritize normal turn allocation,C,1,DEBTCONSOLIDATION
+JMY-0090,Saleh Al-Zahrani,0587769453,25,2083,28,500,0.24,2,12,11,1,0,No,94,Green,Yes,89,minor late payments; high contribution burden,Approve and prioritize normal turn allocation,A,0,VENTURE
+JMY-0001,Hajer Al-Dhafairi,0514737996,26,2333,25,500,0.21,3,12,11,1,0,No,92,Green,Yes,90,minor late payments,Approve and prioritize normal turn allocation,B,1,PERSONAL
+JMY-0035,Lama Al-Yami,0550752735,24,2667,25,500,0.19,3,12,10,2,0,No,91,Green,Yes,91,minor late payments,Approve and prioritize normal turn allocation,C,1,EDUCATION
+JMY-0045,Dana Al-Zahrani,0545494808,26,2250,25,500,0.22,3,12,10,2,0,No,91,Green,Yes,92,minor late payments,Approve and prioritize normal turn allocation,A,1,DEBTCONSOLIDATION
+JMY-0146,Faisal Al-Rashidi,0531367837,21,4354,25,500,0.11,2,12,10,2,0,No,89,Green,Yes,93,minor late payments,Approve and prioritize normal turn allocation,C,1,MEDICAL
+JMY-0041,Layan Al-Rashidi,0577014363,29,9583,27,750,0.08,6,12,11,1,0,Yes,88,Green,Yes,94,previous default; minor late payments,Approve and prioritize normal turn allocation,C,0,EDUCATION
+JMY-0061,Hajer Al-Dhafairi,0549578856,24,2333,27,500,0.21,3,12,10,2,0,No,88,Green,Yes,95,minor late payments,Approve and prioritize normal turn allocation,B,1,EDUCATION
+JMY-0091,Hajer Al-Dhafairi,0585574443,25,8750,28,700,0.08,2,12,11,1,0,Yes,82,Green,Yes,96,previous default; minor late payments,Approve and prioritize normal turn allocation,C,0,VENTURE
+JMY-0134,Hessa Al-Mutairi,0513518233,22,3542,28,500,0.14,4,12,11,1,0,Yes,80,Green,Yes,97,previous default; minor late payments,Approve and prioritize normal turn allocation,C,0,DEBTCONSOLIDATION
+JMY-0129,Rafa Al-Subaie,0574989413,35,6500,25,500,0.08,6,12,9,3,0,No,96,Yellow,Conditional,98,repeated late payments,Approve conditionally with reminder and monitoring,C,1,PERSONAL
+JMY-0139,Khalid Al-Anazi,0543524082,42,5242,25,500,0.1,10,12,9,3,0,No,96,Yellow,Conditional,99,repeated late payments,Approve conditionally with reminder and monitoring,C,1,MEDICAL
+JMY-0068,Weam Al-Shammari,0540084271,42,3200,25,500,0.16,10,12,9,3,0,No,94,Yellow,Conditional,100,repeated late payments,Approve conditionally with reminder and monitoring,B,1,MEDICAL
+JMY-0064,Sara Al-Anazi,0509477752,26,5242,25,600,0.11,3,12,9,3,0,No,92,Yellow,Conditional,101,repeated late payments,Approve conditionally with reminder and monitoring,C,1,MEDICAL
+JMY-0053,Sultan Al-Shammari,0504711671,28,2774,25,500,0.18,5,12,9,3,0,No,90,Yellow,Conditional,102,repeated late payments,Approve conditionally with reminder and monitoring,C,1,DEBTCONSOLIDATION
+JMY-0087,Abdulaziz Al-Otaibi,0590229413,26,2500,25,500,0.2,2,12,9,3,0,No,88,Yellow,Conditional,103,repeated late payments,Approve conditionally with reminder and monitoring,B,1,EDUCATION
+JMY-0069,Rafa Al-Subaie,0518699938,23,3958,27,600,0.15,4,12,9,3,0,No,88,Yellow,Conditional,104,repeated late payments,Approve conditionally with reminder and monitoring,C,1,MEDICAL
+JMY-0118,Rakan Al-Ghamdi,0567749649,23,4500,27,700,0.16,2,12,9,3,0,No,88,Yellow,Conditional,105,repeated late payments,Approve conditionally with reminder and monitoring,B,1,PERSONAL
+JMY-0144,Bader Al-Subaie,0590913341,29,9000,25,850,0.09,9,12,9,2,1,No,86,Yellow,Conditional,106,minor late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,PERSONAL
+JMY-0142,Turki Al-Shehri,0523281206,21,2167,25,500,0.23,4,12,9,3,0,No,86,Yellow,Conditional,107,repeated late payments; high contribution burden,Approve conditionally with reminder and monitoring,B,1,PERSONAL
+JMY-0049,Khalid Al-Anazi,0579740344,37,6083,27,500,0.08,10,12,9,2,1,No,86,Yellow,Conditional,108,minor late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,DEBTCONSOLIDATION
+JMY-0016,Mohammed Al-Dhafairi,0571349361,27,6000,28,850,0.14,10,12,9,2,1,No,86,Yellow,Conditional,109,minor late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,VENTURE
+JMY-0124,Sara Al-Anazi,0583242102,25,6500,25,500,0.08,4,12,9,2,1,No,84,Yellow,Conditional,110,minor late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,DEBTCONSOLIDATION
+JMY-0056,Faisal Al-Rashidi,0549947174,24,6583,27,550,0.08,2,12,10,1,1,No,84,Yellow,Conditional,111,minor late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,HOMEIMPROVEMENT
+JMY-0011,Layan Al-Rashidi,0564887719,28,2833,30,500,0.18,9,12,10,1,1,No,84,Yellow,Conditional,112,minor late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,PERSONAL
+JMY-0043,Nouf Al-Ghamdi,0506594013,30,12333,25,1000,0.08,8,12,9,2,1,No,82,Yellow,Conditional,113,minor late payments; missed payments; weak credit grade,Approve conditionally with reminder and monitoring,E,1,EDUCATION
+JMY-0113,Sultan Al-Shammari,0599049027,24,5000,27,700,0.14,4,12,8,3,1,No,79,Yellow,Conditional,114,repeated late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,PERSONAL
+JMY-0123,Reem Al-Bishi,0587429671,24,6500,25,650,0.1,2,12,10,1,1,No,78,Yellow,Conditional,115,minor late payments; missed payments; weak credit grade,Approve conditionally with reminder and monitoring,F,1,VENTURE
+JMY-0066,Maha Al-Harbi,0575655125,37,6500,30,700,0.11,10,12,8,3,1,No,78,Yellow,Conditional,116,repeated late payments; missed payments; weak credit grade,Approve conditionally with reminder and monitoring,E,1,DEBTCONSOLIDATION
+JMY-0019,Khalid Al-Anazi,0567468071,29,2600,25,500,0.19,6,12,10,2,0,Yes,77,Yellow,Conditional,117,previous default; minor late payments,Approve conditionally with reminder and monitoring,C,0,PERSONAL
+JMY-0039,Rafa Al-Subaie,0554516808,23,7125,28,600,0.08,2,12,10,2,0,Yes,77,Yellow,Conditional,118,previous default; minor late payments,Approve conditionally with reminder and monitoring,C,0,EDUCATION
+JMY-0114,Bader Al-Subaie,0576038597,40,2333,25,500,0.21,10,12,11,1,0,Yes,76,Yellow,Conditional,119,previous default; minor late payments,Approve conditionally with reminder and monitoring,C,0,VENTURE
+JMY-0083,Sultan Al-Shammari,0570348247,22,5333,25,500,0.09,2,12,8,3,1,No,75,Yellow,Conditional,120,repeated late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,PERSONAL
+JMY-0102,Munirah Al-Otaibi,0571093248,34,3000,25,500,0.17,10,12,8,3,1,No,75,Yellow,Conditional,121,repeated late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,VENTURE
+JMY-0040,Abeer Al-Qahtani,0508613171,26,2500,25,500,0.2,4,12,9,2,1,No,74,Yellow,Conditional,122,minor late payments; missed payments; weak credit grade,Approve conditionally with reminder and monitoring,E,1,MEDICAL
+JMY-0006,Maha Al-Harbi,0527484677,25,2500,28,500,0.2,2,12,9,2,1,No,74,Yellow,Conditional,123,minor late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,VENTURE
+JMY-0063,Reem Al-Bishi,0537826398,23,8083,25,650,0.08,3,12,10,2,0,Yes,73,Yellow,Conditional,124,previous default; minor late payments; weak credit grade,Approve conditionally with reminder and monitoring,E,0,PERSONAL
+JMY-0020,Saad Al-Yami,0521465840,23,3500,25,500,0.14,2,12,11,1,0,Yes,72,Yellow,Conditional,125,previous default; minor late payments,Approve conditionally with reminder and monitoring,D,0,EDUCATION
+JMY-0088,Rakan Al-Ghamdi,0544997278,36,2000,27,500,0.25,10,12,8,3,1,No,72,Yellow,Conditional,126,repeated late payments; missed payments; high contribution burden,Approve conditionally with reminder and monitoring,C,1,DEBTCONSOLIDATION
+JMY-0005,Lama Al-Yami,0575588675,22,2333,25,500,0.21,2,12,11,1,0,Yes,70,Yellow,Conditional,127,previous default; minor late payments,Approve conditionally with reminder and monitoring,C,0,EDUCATION
+JMY-0095,Lama Al-Yami,0533963605,25,4042,27,700,0.17,4,12,8,3,1,No,70,Yellow,Conditional,128,repeated late payments; missed payments; weak credit grade,Approve conditionally with reminder and monitoring,E,1,EDUCATION
+JMY-0127,Shahad Al-Shehri,0576627028,22,5958,27,500,0.08,2,12,10,1,1,Yes,69,Yellow,Conditional,129,previous default; minor late payments; missed payments,Approve conditionally with reminder and monitoring,C,0,EDUCATION
+JMY-0071,Layan Al-Rashidi,0595171870,29,3333,27,500,0.15,7,12,10,1,1,Yes,69,Yellow,Conditional,130,previous default; minor late payments; missed payments,Approve conditionally with reminder and monitoring,C,0,DEBTCONSOLIDATION
+JMY-0103,Nouf Al-Ghamdi,0526217459,29,3000,27,500,0.17,5,12,10,1,1,Yes,69,Yellow,Conditional,131,previous default; minor late payments; missed payments,Approve conditionally with reminder and monitoring,C,0,MEDICAL
+JMY-0027,Abdulaziz Al-Otaibi,0561586578,22,10833,25,850,0.08,4,12,9,2,1,Yes,68,Yellow,Conditional,132,previous default; minor late payments; missed payments,Approve conditionally with reminder and monitoring,C,0,EDUCATION
+JMY-0112,Turki Al-Shehri,0509134316,35,3333,25,500,0.15,5,12,9,2,1,Yes,64,Yellow,Conditional,133,previous default; minor late payments; missed payments,Approve conditionally with reminder and monitoring,C,0,DEBTCONSOLIDATION
+JMY-0092,Noura Al-Dosari,0511724005,24,3250,25,700,0.22,2,12,8,3,1,No,63,Yellow,Conditional,134,repeated late payments; missed payments,Approve conditionally with reminder and monitoring,D,1,MEDICAL
+JMY-0107,Abdullah Al-Dosari,0504556238,22,4917,27,500,0.1,4,12,7,4,1,No,62,Yellow,Conditional,135,repeated late payments; missed payments; weak credit grade,Approve conditionally with reminder and monitoring,F,1,DEBTCONSOLIDATION
+JMY-0004,Sara Al-Anazi,0569222196,25,3000,25,500,0.17,2,12,9,2,1,Yes,58,Yellow,Conditional,136,previous default; minor late payments; missed payments,Approve conditionally with reminder and monitoring,C,0,DEBTCONSOLIDATION
+JMY-0036,Maha Al-Harbi,0593792374,21,2773,30,500,0.18,2,12,9,2,1,Yes,58,Yellow,Conditional,137,previous default; minor late payments; missed payments,Approve conditionally with reminder and monitoring,C,0,VENTURE
+JMY-0058,Rakan Al-Ghamdi,0574074821,27,10000,25,800,0.08,7,12,9,3,0,Yes,72,Red,No,138,previous default; repeated late payments; weak credit grade,Require guarantor or defer participation,E,0,EDUCATION
+JMY-0137,Abdullah Al-Dosari,0575946474,28,4083,27,500,0.12,9,12,9,3,0,Yes,72,Red,No,139,previous default; repeated late payments,Require guarantor or defer participation,C,1,VENTURE
+JMY-0100,Abeer Al-Qahtani,0536713695,34,6083,27,500,0.08,5,12,7,4,1,Yes,58,Red,No,140,previous default; repeated late payments; missed payments,Require guarantor or defer participation,D,1,PERSONAL
+JMY-0138,Fahad Al-Bishi,0594406409,39,25867,28,2050,0.08,10,12,7,4,1,Yes,58,Red,No,141,previous default; repeated late payments; missed payments,Require guarantor or defer participation,D,1,DEBTCONSOLIDATION
+JMY-0048,Fahad Al-Bishi,0509743953,35,3667,25,550,0.15,8,12,7,4,1,Yes,56,Red,No,142,previous default; repeated late payments; missed payments,Require guarantor or defer participation,C,1,PERSONAL
+JMY-0031,Hajer Al-Dhafairi,0539421047,24,2500,25,500,0.2,3,12,8,3,1,Yes,56,Red,No,143,previous default; repeated late payments; missed payments,Require guarantor or defer participation,C,1,HOMEIMPROVEMENT
+JMY-0149,Majed Al-Mutairi,0509521456,29,5333,25,500,0.09,6,12,6,5,1,Yes,54,Red,No,144,previous default; repeated late payments; missed payments,Require guarantor or defer participation,D,1,DEBTCONSOLIDATION
+JMY-0122,Noura Al-Dosari,0523285884,25,8333,28,750,0.09,3,12,7,4,1,Yes,54,Red,No,145,previous default; repeated late payments; missed payments,Require guarantor or defer participation,D,1,PERSONAL
+JMY-0029,Majed Al-Mutairi,0524745171,30,9000,25,700,0.08,7,12,7,3,2,Yes,50,Red,No,146,previous default; repeated late payments; missed payments,Require guarantor or defer participation,D,1,PERSONAL
+JMY-0054,Bader Al-Subaie,0523685160,29,2833,25,500,0.18,9,12,7,4,1,Yes,50,Red,No,147,previous default; repeated late payments; missed payments; weak credit grade,Require guarantor or defer participation,E,1,DEBTCONSOLIDATION
+JMY-0002,Noura Al-Dosari,0548175496,24,6167,27,900,0.15,3,12,6,5,1,Yes,50,Red,No,148,previous default; repeated late payments; missed payments,Require guarantor or defer participation,D,1,DEBTCONSOLIDATION
+JMY-0096,Maha Al-Harbi,0551370985,29,3667,27,500,0.14,8,12,7,3,2,Yes,44,Red,No,149,previous default; repeated late payments; missed payments,Require guarantor or defer participation,D,1,PERSONAL
+JMY-0032,Noura Al-Dosari,0593174612,28,2083,28,500,0.24,6,12,6,4,2,Yes,28,Red,No,150,previous default; repeated late payments; missed payments; high contribution burden; weak credit grade,Require guarantor or defer participation,F,1,HOMEIMPROVEMENT

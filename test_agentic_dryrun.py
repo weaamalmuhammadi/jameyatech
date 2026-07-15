@@ -70,13 +70,19 @@ def test_agent_logs_to_memory():
         os.remove(path)
     mem = JamiyaMemory(path=path)
 
-    fake_reply = json.dumps({"risk_level": "yellow", "reason": "دفعة متأخرة"})
+    member_data = {"name": "Ahmed", "monthly_income": 8000}
+    # risk_level/trust_score are now computed deterministically (see
+    # risk_agent.compute_trust_score) before the LLM is ever called -- the
+    # LLM's job is just to explain that already-decided level in Arabic, so
+    # the mocked reply only needs a "reason".
+    expected_level = risk_agent.compute_trust_score(member_data)["risk_level"]
+    fake_reply = json.dumps({"reason": "دفعة متأخرة"})
     fake_response = make_response(make_message(content=f"```json\n{fake_reply}\n```"))
 
     with patch.object(risk_agent.client.chat.completions, "create", return_value=fake_response):
-        result = risk_agent.assess_risk({"name": "Ahmed", "monthly_income": 8000}, memory=mem)
+        result = risk_agent.assess_risk(member_data, memory=mem)
 
-    assert result["risk_level"] == "yellow", result
+    assert result["risk_level"] == expected_level, result
     ctx = mem.get_member_context("Ahmed")
     assert len(ctx["past_risk_assessments"]) == 1, ctx
 

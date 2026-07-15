@@ -4,8 +4,26 @@ from typing import Optional
 from groq import Groq
 
 from memory import JamiyaMemory
+from agent_utils import call_llm_json
 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+
+
+def _fallback_turn_order(members: list) -> dict:
+    """Deterministic fallback if the LLM response can't be parsed: sort by
+    salary date ascending (earliest-paid members first) so the circle can
+    still start rather than getting stuck on a malformed generation."""
+    ordered = sorted(members, key=lambda m: m.get("salary_date") or 32)
+    return {
+        "turn_order": [
+            {
+                "month": i + 1,
+                "name": m.get("name", "unknown"),
+                "reason": "ترتيب افتراضي حسب تاريخ الراتب (تعذر توليد ترتيب ذكي)",
+            }
+            for i, m in enumerate(ordered)
+        ]
+    }
 
 
 def assign_turns(members: list, memory: Optional[JamiyaMemory] = None) -> dict:
@@ -56,19 +74,16 @@ Respond ONLY with valid JSON in this exact format, nothing else:
 }
 """
 
-    response = client.chat.completions.create(
+    result = call_llm_json(
+        client,
         model="llama-3.3-70b-versatile",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
         ],
         temperature=0.3,
+        fallback=_fallback_turn_order(members),
     )
-
-    raw = response.choices[0].message.content.strip()
-    raw = raw.replace("```json", "").replace("```", "").strip()
-
-    result = json.loads(raw)
 
     if memory:
         for entry in result.get("turn_order", []):

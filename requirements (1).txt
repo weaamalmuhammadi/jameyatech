@@ -2,3 +2,5 @@ groq
 streamlit
 flask
 flask-cors
+pandas
+pytest

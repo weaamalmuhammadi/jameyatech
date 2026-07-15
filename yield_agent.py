@@ -4,6 +4,7 @@ from typing import Optional
 from groq import Groq
 
 from memory import JamiyaMemory
+from agent_utils import call_llm_json
 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
@@ -48,19 +49,20 @@ Respond ONLY with valid JSON in this exact format, nothing else:
 }}
 """
 
-    response = client.chat.completions.create(
+    result = call_llm_json(
+        client,
         model="llama-3.3-70b-versatile",
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
         ],
         temperature=0.3,
+        fallback={
+            "yield_earned": round(earned_yield, 2),
+            "new_total": round(new_total, 2),
+            "explanation": "تم حساب العائد المتوقع بناءً على المعدل الشهري المتوافق مع الشريعة.",
+        },
     )
-
-    raw = response.choices[0].message.content.strip()
-    raw = raw.replace("```json", "").replace("```", "").strip()
-
-    result = json.loads(raw)
 
     if memory:
         memory.update_circle_pool(new_total, 0)  # pool resets idle-clock once paid out/reinvested
