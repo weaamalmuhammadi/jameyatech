@@ -13,7 +13,7 @@ var state = {
   activeCircleId:null, payMode:'off', contractView:'off', notifView:false, loginPhone:'', loginPassword:'', createStep:1,
   signupName:'', signupNid:'', signupPhone:'',
   session:null, // {phone, name_ar, name_en} once logged in -- see accounts.py
-  settings:{lang:'ar',textSize:'normal',notifPayment:true,notifGroup:true}
+  settings:{lang:'ar',textSize:'normal',notifPayment:true,notifGroup:true,themeMode:'light'}
 };
 function setState(u){
   for(var k in u) state[k]=u[k];
@@ -143,6 +143,7 @@ ar:{
   phoneNameMismatch:function(recordName){return 'رقم الجوال مسجّل باسم مختلف'+(recordName?' ('+recordName+')':'')+' — يُنصح بالتحقق من الهوية.'},
   riskReason:'السبب',riskHistory:'السجل',
   settingsTitle:'الإعدادات',appearanceSection:'المظهر',
+  themeModeLabel:'السمة',themeLight:'فاتح',themeDark:'داكن',
   languageLabel:'اللغة',textSizeLabel:'حجم الخط',
   sizeNormal:'عادي',sizeLarge:'كبير',sizeXlarge:'كبير جداً',
   sizePreview:'هذا مثال على حجم الخط',
@@ -296,6 +297,7 @@ en:{
   phoneNameMismatch:function(recordName){return 'This phone number is on record under a different name'+(recordName?' ('+recordName+')':'')+' — identity verification recommended.'},
   riskReason:'Reason',riskHistory:'History',
   settingsTitle:'Settings',appearanceSection:'Appearance',
+  themeModeLabel:'Theme',themeLight:'Light',themeDark:'Dark',
   languageLabel:'Language',textSizeLabel:'Text Size',
   sizeNormal:'Normal',sizeLarge:'Large',sizeXlarge:'Extra Large',
   sizePreview:'This is a font size preview',
@@ -508,6 +510,14 @@ function setHtml(id,html){var e=el(id);if(e)e.innerHTML=html;return e;}
 function on(id,evt,fn){var e=el(id);if(e)e.addEventListener(evt,fn)}
 function qa(sel){return document.querySelectorAll(sel)}
 function applyScale(){document.documentElement.style.setProperty('--sc',({normal:1,large:1.2,xlarge:1.45})[state.settings.textSize]||1)}
+// themeMode is 'light' (the default) | 'dark' -- always explicit, no OS
+// auto-follow (that was confusing: it silently matched whatever the demo
+// machine's OS theme happened to be, so "System" and "Dark" could look
+// identical with no obvious reason why). Any unrecognized/legacy stored
+// value (e.g. an old 'system') safely falls back to light.
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme',state.settings.themeMode==='dark'?'dark':'light');
+}
 function logoHtml(){return '<div class="logo"><img src="Logo-Jamiyahtech.png" class="logo-ic" alt="JameyaTech" /><p class="txl b9" style="color:var(--primary-dark)">جمعيتك</p><p class="ts cm" style="margin-top:3px">JameyaTech</p></div>';}
 function fmtDateObj(d){var mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];var moAr=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];return isA()?(d.getDate()+' '+moAr[d.getMonth()]+' '+d.getFullYear()):(mo[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear());}
 function fmtDate(iso){if(!iso)return '—';return fmtDateObj(new Date(iso+'T00:00:00'));}
@@ -687,14 +697,14 @@ function scrLanguage(){
   $app.innerHTML='<div class="cen">'+logoHtml()+
     '<p class="txl b8 ct tc" style="margin-bottom:6px">اختر لغتك</p>'+
     '<p class="tb cm tc" style="margin-bottom:24px">Choose your language</p>'+
-    '<div class="vstrip">'+
-    '<div class="vchip">'+iconCirc('shield',16)+'<p>فحص المخاطر بالذكاء الاصطناعي · AI risk screening</p></div>'+
-    '<div class="vchip">'+iconCirc('sparkles',16)+'<p>ترتيب دور عادل تلقائياً · Fair automatic turn order</p></div>'+
-    '<div class="vchip">'+iconCirc('trend',16)+'<p>عائد شرعي على المبلغ المجمّع · Shariah-compliant yield</p></div>'+
-    '</div>'+
     '<div style="width:100%">'+
     '<button id="la" class="lbtn" style="flex-direction:row-reverse"><span style="font-size:28px">🇸🇦</span><div style="text-align:right"><p class="txl b9 ct">العربية</p><p class="ts cm">Arabic</p></div></button>'+
-    '<button id="le" class="lbtn"><div style="text-align:left"><p class="txl b9 ct">English</p><p class="ts cm">الإنجليزية</p></div><span style="font-size:28px">🌐</span></button></div></div>';
+    '<button id="le" class="lbtn"><div style="text-align:left"><p class="txl b9 ct">English</p><p class="ts cm">الإنجليزية</p></div><span style="font-size:28px">🌐</span></button></div>'+
+    '<div class="vstrip">'+
+    '<div class="vchip">'+icon('shield',13)+'<p>فحص المخاطر بالذكاء الاصطناعي · AI risk screening</p></div>'+
+    '<div class="vchip">'+icon('sparkles',13)+'<p>ترتيب دور عادل تلقائياً · Fair automatic turn order</p></div>'+
+    '<div class="vchip">'+icon('trend',13)+'<p>عائد شرعي على المبلغ المجمّع · Shariah-compliant yield</p></div>'+
+    '</div></div>';
   on('la','click',function(){setState({lang:'ar',phase:'login',settings:Object.assign({},state.settings,{lang:'ar'})})});
   on('le','click',function(){setState({lang:'en',phase:'login',settings:Object.assign({},state.settings,{lang:'en'})})});
 }
@@ -1463,7 +1473,11 @@ function scrSettings(){
 
   $app.innerHTML='<div class="has-nav"><div class="hdr"><h1 style="text-align:'+ta()+'">'+l.settingsTitle+'</h1></div><div class="body">'+
     '<p class="slbl" style="text-align:'+ta()+'">'+l.appearanceSection+'</p>'+
-    '<div class="cd"><div style="padding-bottom:18px;border-bottom:1px solid var(--border);margin-bottom:18px"><p class="fl">'+l.languageLabel+'</p><div class="ltg"><button id="sla" class="ltb'+(s.lang==='ar'?' on':'')+'">العربية</button><button id="sle" class="ltb'+(s.lang==='en'?' on':'')+'">English</button></div></div>'+
+    '<div class="cd"><div style="padding-bottom:18px;border-bottom:1px solid var(--border);margin-bottom:18px"><p class="fl">'+l.themeModeLabel+'</p><div class="ltg">'+
+    '<button id="thlight" class="ltb'+(s.themeMode!=='dark'?' on':'')+'">'+l.themeLight+'</button>'+
+    '<button id="thdark" class="ltb'+(s.themeMode==='dark'?' on':'')+'">'+l.themeDark+'</button>'+
+    '</div></div>'+
+    '<div style="padding-bottom:18px;border-bottom:1px solid var(--border);margin-bottom:18px"><p class="fl">'+l.languageLabel+'</p><div class="ltg"><button id="sla" class="ltb'+(s.lang==='ar'?' on':'')+'">العربية</button><button id="sle" class="ltb'+(s.lang==='en'?' on':'')+'">English</button></div></div>'+
     '<div><p class="fl">'+l.textSizeLabel+'</p><div class="szopt">'+szb+'</div><div class="spv"><p class="cp b6" style="font-size:calc(16px*var(--sc))">'+l.sizePreview+'</p><p class="cm" style="font-size:calc(14px*var(--sc));margin-top:4px">'+(isA()?'١٢٣٤ ريال سعودي':'SAR 1,234')+'</p></div></div></div>'+
     '<p class="slbl" style="text-align:'+ta()+'">'+l.notifSection+'</p>'+
     '<div class="cd"><div class="srow"><div class="f row g10 ac" style="'+(isA()?'flex-direction:row-reverse;':'')+'"><div class="srow-ic">'+icon('card',16)+'</div><p class="tm b6 ct">'+l.notifPayment+'</p></div><button class="tgl'+(s.notifPayment?' on':'')+'" id="tp"></button></div>'+
@@ -1479,6 +1493,8 @@ function scrSettings(){
     '<div class="srow"><div class="f row g10 ac" style="'+(isA()?'flex-direction:row-reverse;':'')+'"><div class="srow-ic">'+icon('info',16)+'</div><p class="tm b6 ct">'+l.versionLabel+'</p></div><p class="tb cm">1.0.0</p></div></div>'+
     '<button id="blo" class="bd f row g8 ac jc" style="'+(isA()?'flex-direction:row-reverse;':'')+'margin-top:4px">'+icon('logout',16)+l.logoutBtn+'</button></div></div>';
 
+  on('thlight','click',function(){applySet(Object.assign({},state.settings,{themeMode:'light'}))});
+  on('thdark','click',function(){applySet(Object.assign({},state.settings,{themeMode:'dark'}))});
   on('sla','click',function(){applySet(Object.assign({},state.settings,{lang:'ar'}))});
   on('sle','click',function(){applySet(Object.assign({},state.settings,{lang:'en'}))});
   qa('.szb').forEach(function(btn){btn.addEventListener('click',function(){applySet(Object.assign({},state.settings,{textSize:btn.dataset.sz}))})});
@@ -1531,6 +1547,7 @@ function render(){
   document.documentElement.lang=state.lang;
   document.documentElement.dir=state.lang==='ar'?'rtl':'ltr';
   applyScale();
+  applyTheme();
   if(state.phase==='language')scrLanguage();
   else if(state.phase==='login')scrLogin();
   else if(state.phase==='signup')scrSignup();

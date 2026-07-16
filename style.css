@@ -1,31 +1,39 @@
+/* Palette sourced from alinma.com's actual stylesheet/logo (navy #002134,
+   secondary navy #033957, copper #A36544, purple #837FD8 all appear
+   verbatim in their CSS) -- status colors (green/yellow/red/blue) and the
+   AI-accent teal stay app-specific: they're functional/semantic, and the
+   AI accent is deliberately distinct from the bank palette so it still
+   reads as "the AI did this" rather than blending into brand chrome. */
 :root {
-  --primary-dark:#152C47;--primary:#1E3A5F;--primary-lt:#E7ECF2;
-  --gold:#A86E3D;--gold-lt:#F3E7DC;
-  --bg:#F4F5F7;--card:#FFFFFF;--text:#16232F;--muted:#647184;--border:#DCE2E9;
+  --primary-dark:#002134;--primary:#033957;--primary-lt:#E6EFF0;
+  --gold:#A36544;--gold-lt:#F3E4DE;
+  --bg:#FAF7F4;--card:#FFFFFF;--text:#121212;--muted:#5E6A78;--border:#E1E5E8;
   --green:#15803D;--green-bg:#DCFCE7;
   --yellow:#B45309;--yellow-bg:#FEF3C7;
   --red:#B91C1C;--red-bg:#FEE2E2;
   --blue:#1D4ED8;--blue-bg:#DBEAFE;
-  --purple:#8D6BB8;--purple-bg:#EFE9F5;
+  --purple:#837FD8;--purple-bg:#EBEAF9;
   --ai:#0F766E;--ai-bg:#E6F5F3;--ai-border:rgba(15,118,110,.22);
   --sc:1;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --primary-dark:#0B1420;--primary:#3E6FA8;--primary-lt:rgba(62,111,168,.18);
-    --gold:#D6A876;--gold-lt:rgba(214,168,118,.16);
-    --bg:#0E151D;--card:#182430;--text:#EEF2F6;--muted:#8C9AAA;--border:#2A3846;
-    --green:#4ADE80;--green-bg:rgba(74,222,128,.14);
-    --yellow:#FBBF24;--yellow-bg:rgba(251,191,36,.14);
-    --red:#F87171;--red-bg:rgba(248,113,113,.14);
-    --blue:#60A5FA;--blue-bg:rgba(96,165,250,.14);
-    --purple:#C9AEEA;--purple-bg:rgba(201,174,234,.14);
-    --ai:#5EEAD4;--ai-bg:rgba(94,234,212,.12);--ai-border:rgba(94,234,212,.28);
-  }
-  #root{box-shadow:0 0 60px rgba(0,0,0,.6)}
-  .logo-ic,.brand-ic{box-shadow:0 8px 24px rgba(0,0,0,.5)}
+/* Dark palette -- always explicit via data-theme="dark" set by
+   applyTheme() in app.js (Settings -> Appearance -> Theme). No OS
+   auto-follow: that used to silently mirror the demo machine's OS theme,
+   which was confusing (Light/Dark are now the only two choices). */
+:root[data-theme="dark"] {
+  --primary-dark:#00131F;--primary:#5B8CB8;--primary-lt:rgba(91,140,184,.18);
+  --gold:#D6A876;--gold-lt:rgba(214,168,118,.16);
+  --bg:#0A141C;--card:#16222D;--text:#F1EDE9;--muted:#93A0AC;--border:#29394A;
+  --green:#4ADE80;--green-bg:rgba(74,222,128,.14);
+  --yellow:#FBBF24;--yellow-bg:rgba(251,191,36,.14);
+  --red:#F87171;--red-bg:rgba(248,113,113,.14);
+  --blue:#60A5FA;--blue-bg:rgba(96,165,250,.14);
+  --purple:#ACA8FF;--purple-bg:rgba(172,168,255,.14);
+  --ai:#5EEAD4;--ai-bg:rgba(94,234,212,.12);--ai-border:rgba(94,234,212,.28);
 }
+:root[data-theme="dark"] #root{box-shadow:0 0 60px rgba(0,0,0,.6)}
+:root[data-theme="dark"] .logo-ic,:root[data-theme="dark"] .brand-ic{box-shadow:0 8px 24px rgba(0,0,0,.5)}
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden;background:var(--primary-dark);-webkit-font-smoothing:antialiased}
@@ -252,11 +260,11 @@ button:focus-visible,input:focus-visible,.cd-click:focus-visible{outline:2.5px s
 .trust-row{display:flex;flex-wrap:wrap;gap:8px}
 
 /* ═══ Value strip (onboarding value props) ═══ */
-.vstrip{display:flex;flex-direction:column;gap:10px;width:100%;margin-bottom:30px}
-.vchip{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 14px;box-shadow:0 2px 8px rgba(30,58,95,.05)}
+.vstrip{display:flex;flex-direction:column;gap:8px;width:100%;margin-top:20px}
+.vchip{display:flex;align-items:center;justify-content:center;gap:7px;color:var(--muted)}
 [dir=rtl] .vchip{flex-direction:row-reverse}
-.vchip .ic-circ{width:36px;height:36px;background:var(--primary-lt);color:var(--primary)}
-.vchip p{color:var(--text);font-size:calc(12.5px*var(--sc));font-weight:600}
+.vchip .ic{flex-shrink:0}
+.vchip p{color:var(--muted);font-size:calc(11px*var(--sc));font-weight:600;text-align:center}
 
 /* ═══ Activity timeline (Orchestrator visibility) ═══ */
 .timeline{position:relative;padding:0}
