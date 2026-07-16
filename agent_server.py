@@ -15,9 +15,10 @@ Then serve the static site separately, e.g.:
 and open http://localhost:8000 in a browser. app.js calls this API at
 http://localhost:5001 (see AGENT_API in app.js).
 """
+import calendar
 import os
 import re
-from datetime import date
+from datetime import date, timedelta
 
 # risk_agent/turn_agent/yield_agent/mediator_agent all construct a Groq client
 # at import time, which raises immediately if GROQ_API_KEY isn't set. Record
@@ -86,6 +87,112 @@ def _seed_demo_circle():
 _seed_demo_circle()
 
 
+# Flavor names for the synthetic co-members in a fresh signup's starter
+# circles -- never real accounts, never logged into.
+_STARTER_PEOPLE = [
+    ("خالد العتيبي", "Khalid Al-Otaibi"),
+    ("سارة القحطاني", "Sara Al-Qahtani"),
+    ("منيرة الشمري", "Munira Al-Shammari"),
+    ("عبدالله الحربي", "Abdullah Al-Harbi"),
+    ("فيصل الدوسري", "Faisal Al-Dosari"),
+]
+
+
+def _synthetic_phone(base_phone: str, salt: int) -> str:
+    """A plausible-looking 10-digit Saudi mobile number derived from the
+    real account's own phone, not a hardcoded constant -- so it can never
+    collide with an actual registered account's number."""
+    digits = re.sub(r"\D", "", base_phone)[-8:].rjust(8, "0")
+    n = (int(digits) + salt) % 100000000
+    return "05" + str(n).rjust(8, "0")
+
+
+def _add_months(d: date, n: int) -> date:
+    month = d.month - 1 + n
+    year = d.year + month // 12
+    month = month % 12 + 1
+    day = min(d.day, calendar.monthrange(year, month)[1])
+    return date(year, month, day)
+
+
+def _seed_starter_circles_for(phone: str, name: str) -> None:
+    """Gives a newly self-registered account 3 varied example circles
+    instead of an empty list, so a judge/demo user sees every facet of the
+    product right after signing up -- a waiting circle (Turn Agent
+    suggestion, live Risk Agent check, a pre-flagged member), an active
+    circle (payment due, a delayed member for the Mediator Agent, the
+    Yield Agent card), and a pending invitation from someone else (accept/
+    decline flow) -- instead of starting from an empty circles list."""
+    base = int(re.sub(r"\D", "", phone)[-8:].rjust(8, "0") or "0")
+    circle_base_id = 2000000000 + base * 10
+    today = date.today()
+
+    def synth_phone(salt):
+        return _synthetic_phone(phone, salt)
+
+    def me(turn, paid, confirmed):
+        return {
+            "id": turn - 1, "ar": name, "en": name, "init": name[:2].upper(),
+            "phone": phone, "turn": turn, "paid": paid, "confirmed": confirmed, "risk": None,
+        }
+
+    def other(idx, turn, paid, confirmed, risk=None):
+        ar, en = _STARTER_PEOPLE[idx]
+        return {
+            "id": turn - 1, "ar": ar, "en": en, "init": en[:2].upper(),
+            "phone": synth_phone(idx + 1), "turn": turn, "paid": paid,
+            "confirmed": confirmed, "risk": risk,
+        }
+
+    # Circle 1 -- waiting to start: Turn Agent suggestion, live Risk Agent
+    # check on the add-member form, and a pre-flagged member so the Trust
+    # & Risk panel isn't empty.
+    start1 = _add_months(today, 1).replace(day=1)
+    c1 = {
+        "id": circle_base_id + 1, "ar": "جمعية العائلة", "en": "Family Circle",
+        "organizerPhone": phone, "amount": 500, "currentTurn": 0, "totalTurns": 3,
+        "startDate": start1.isoformat(), "status": "waiting",
+        "members": [
+            me(1, False, "confirmed"),
+            other(0, 2, False, "confirmed"),
+            other(1, 3, False, "pending", risk="yellow"),
+        ],
+    }
+
+    # Circle 2 -- active: payment due soon (Pay flow) for this account, one
+    # member already behind (Mediator Agent), Yield Agent card always
+    # visible on active circles.
+    due_target = today + timedelta(days=12)
+    start2 = _add_months(due_target, -2)
+    c2 = {
+        "id": circle_base_id + 2, "ar": "جمعية العمل", "en": "Work Circle",
+        "organizerPhone": phone, "amount": 800, "currentTurn": 2, "totalTurns": 3,
+        "startDate": start2.isoformat(), "status": "active",
+        "members": [
+            other(2, 1, False, "confirmed"),
+            other(3, 2, True, "confirmed"),
+            me(3, False, "confirmed"),
+        ],
+    }
+
+    # Circle 3 -- a pending invitation from someone else's circle, so the
+    # accept/decline flow is visible immediately.
+    start3 = _add_months(today, 1).replace(day=1)
+    c3 = {
+        "id": circle_base_id + 3, "ar": "جمعية الجيران", "en": "Neighbors Circle",
+        "organizerPhone": synth_phone(4), "amount": 600, "currentTurn": 0, "totalTurns": 3,
+        "startDate": start3.isoformat(), "status": "waiting",
+        "members": [
+            other(3, 1, False, "confirmed"),
+            me(2, False, "pending"),
+            other(4, 3, False, "confirmed"),
+        ],
+    }
+
+    for c in (c1, c2, c3):
+        circle_store.save_circle(str(c["id"]), c)
+
+
 @app.route('/api/health', methods=['GET'])
 def health():
     return jsonify({"status": "ok", "groq_key_set": GROQ_KEY_SET})
@@ -131,15 +238,45 @@ def memory_snapshot():
 @app.route('/api/login', methods=['POST'])
 def login():
     """Demo login against the 3 seeded accounts.py accounts -- see that
-    module's docstring for exactly how limited this is (plaintext PIN, no
-    sessions/tokens). Enough for a few real people to log in as different
-    identities and share real circle data via circle_store.py."""
+    module's docstring for exactly how limited this is (plaintext password,
+    no sessions/tokens). Enough for a few real people to log in as different
+    identities and share real circle data via circle_store.py.
+
+    No format check here on purpose: login just has to match whatever the
+    account was created with, and the seeded demo accounts predate the
+    letter+number password rule enforced at registration time."""
     payload = request.get_json(force=True, silent=True) or {}
     phone = re.sub(r"\D", "", payload.get("phone", ""))
-    pin = re.sub(r"\D", "", payload.get("pin", ""))
-    account = accounts.authenticate(phone, pin)
+    password = (payload.get("password") or "").strip()
+    account = accounts.authenticate(phone, password)
     if not account:
-        return jsonify({"error": "Invalid phone or PIN"}), 401
+        return jsonify({"error": "Invalid phone or password"}), 401
+    return jsonify(account)
+
+
+_PASSWORD_MIN_LEN = 8
+
+
+@app.route('/api/register', methods=['POST'])
+def register():
+    """First-time signup: phone, national ID, name, and a chosen password
+    (8+ characters, letters or numbers, no composition requirement -- also
+    enforced client-side, re-checked here since the client can't be
+    trusted). See accounts.py docstring for how limited this auth model is
+    -- enough for a small group of real people to create their own
+    identities, not a production auth system."""
+    payload = request.get_json(force=True, silent=True) or {}
+    phone = re.sub(r"\D", "", payload.get("phone", ""))
+    national_id = re.sub(r"\D", "", payload.get("national_id", ""))
+    name = (payload.get("name") or "").strip()
+    password = (payload.get("password") or "").strip()
+    if len(phone) < 9 or len(national_id) < 10 or not name or len(password) < _PASSWORD_MIN_LEN:
+        return jsonify({"error": "Missing or invalid fields"}), 400
+    try:
+        account = accounts.register(phone, national_id, name, password)
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 409
+    _seed_starter_circles_for(phone, name)
     return jsonify(account)
 
 

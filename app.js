@@ -10,7 +10,8 @@
 // ═══════════════════════════════════════════════════════════
 var state = {
   phase:'language', lang:'ar', tab:'circles',
-  activeCircleId:null, payMode:'off', contractView:'off', notifView:false, loginPhone:'', loginPin:'', createStep:1,
+  activeCircleId:null, payMode:'off', contractView:'off', notifView:false, loginPhone:'', loginPassword:'', createStep:1,
+  signupName:'', signupNid:'', signupPhone:'',
   session:null, // {phone, name_ar, name_en} once logged in -- see accounts.py
   settings:{lang:'ar',textSize:'normal',notifPayment:true,notifGroup:true}
 };
@@ -24,6 +25,16 @@ function setState(u){
 // AI AGENT BRIDGE (Flask server wrapping orchestrator.py — see agent_server.py)
 // ═══════════════════════════════════════════════════════════
 var AGENT_API='http://localhost:5001';
+// Shared with any caller that needs to tell "server unreachable" apart from
+// a real error the server returned (e.g. login: wrong password vs. the
+// backend not being up at all look identical from a raw err string
+// otherwise). Kept as a pure function of the current language so a caller
+// can compare its own err against a fresh call and get the same string.
+function agentUnreachableMsg(){
+  return isA()
+    ?'تعذر الاتصال بخدمة الوكلاء الذكية. تأكد من تشغيل agent_server.py على المنفذ 5001.'
+    :'Could not reach the AI agent service. Make sure agent_server.py is running on port 5001.';
+}
 function callAgent(payload,onDone,path){
   fetch(AGENT_API+(path||'/api/event'),{
     method:'POST',
@@ -35,9 +46,7 @@ function callAgent(payload,onDone,path){
     if(!res.ok||res.data.error) onDone(null,res.data.error||'Request failed');
     else onDone(res.data,null);
   }).catch(function(){
-    onDone(null,isA()
-      ?'تعذر الاتصال بخدمة الوكلاء الذكية. تأكد من تشغيل agent_server.py على المنفذ 5001.'
-      :'Could not reach the AI agent service. Make sure agent_server.py is running on port 5001.');
+    onDone(null,agentUnreachableMsg());
   });
 }
 
@@ -78,17 +87,22 @@ ar:{
   welcomeBack:'أهلاً بك',welcomeSub:'سجّل دخولك للمتابعة',
   nationalIdLabel:'رقم الهوية / الإقامة',nationalIdPH:'1XXXXXXXXX',
   phoneLabel:'رقم الجوال',phonePH:'05XXXXXXXX',
-  usernameLabel:'اسم المستخدم',usernamePH:'أدخل اسم المستخدم',
+  namePH:'مثال: محمد العتيبي',
   errNationalId:'يرجى إدخال رقم هوية/إقامة صحيح',
-  errUsername:'يرجى إدخال اسم المستخدم',
   sendCode:'إرسال رمز التحقق',enterCode:'أدخل رمز التحقق',
   codeSentTo:'تم إرسال الرمز إلى',verify:'تحقق',resend:'إعادة إرسال',
   nafath:'مدعوم بـ نفاذ',errPhone:'يرجى إدخال رقم صحيح',
-  pinLabel:'الرمز السري (٤ أرقام)',pinPH:'••••',errPin:'يرجى إدخال رمز سري من ٤ أرقام',
+  passwordLabel:'كلمة المرور',passwordPH:'••••••••',
+  errPassword:'يرجى إدخال كلمة المرور',
+  errPasswordFormat:'يجب أن تتكون كلمة المرور من ٨ أحرف على الأقل',
+  passwordHint:'٨ أحرف على الأقل (أرقام أو حروف)',
   loginBtn:'تسجيل الدخول',loggingIn:'جاري تسجيل الدخول...',
-  loginError:'رقم الجوال أو الرمز السري غير صحيح',
-  demoAccountsTitle:'حسابات تجريبية للتجربة مع الزملاء',
-  demoAccountsHint:'منظّم: 0511111111 / 1111\nعضو ١: 0522222222 / 2222\nعضو ٢: 0533333333 / 3333',
+  loginError:'رقم الجوال أو كلمة المرور غير صحيحة',
+  noAccountLink:'ليس لديك حساب؟ إنشاء حساب',haveAccountLink:'لديك حساب؟ تسجيل الدخول',
+  signupTitle:'إنشاء حساب جديد',signupSub:'أدخل بياناتك للانضمام إلى جمعيتك',
+  createAccountBtn:'إنشاء الحساب',
+  phoneTakenError:'رقم الجوال مسجّل مسبقاً، جرّب تسجيل الدخول',
+  signupError:'تعذّر إنشاء الحساب، حاول مرة أخرى',
   navCircles:'جمعياتي',navCreate:'إنشاء',navSettings:'الإعدادات',
   myCircles:'جمعياتي',noCircles:'ليس لديك جمعيات بعد',
   noCirclesSub:'اضغط على + لإنشاء جمعيتك الأولى',
@@ -198,7 +212,7 @@ ar:{
   turnReasonsTitle:'أسباب الترتيب المقترح',
   applyOrderBtn:'تطبيق هذا الترتيب',
   orderAppliedMsg:'تم تطبيق الترتيب المقترح',
-  subtotalLabel:'اشتراكك هذا الشهر',queuePosLabel:'ترتيبك في الدور',totalPotLabel:'إجمالي الجمعية',
+  queuePosLabel:'ترتيبك في الدور',totalPotLabel:'إجمالي الجمعية',
   contractTitle:'العقد الرقمي',
   contractDesc:'قبل بدء الجمعية، راجع ملخص الاتفاق الذي سيوقّعه جميع الأعضاء رقمياً عبر نفاذ.',
   contractMembers:'عدد الأعضاء',contractAmount:'المبلغ الشهري',contractOrder:'ترتيب الاستلام',
@@ -210,7 +224,8 @@ ar:{
   trustRiskDesc:'هذه التقييمات خاصة بك كمنظّم ولا تظهر لبقية الأعضاء. يمكن لأي عضو طلب مراجعة بشرية للقرار.',
   noFlagged:'لا يوجد أعضاء عليهم تنبيه حالياً',
   aiServiceDown:'تعذّر الوصول إلى خدمة الوكلاء الذكية حالياً. حاول مرة أخرى بعد قليل.',
-  reqReviewBtn:'الإبلاغ عن خطأ / طلب مراجعة بشرية',
+  serverDownError:'تعذّر الاتصال بالخادم. تأكد من تشغيل agent_server.py على جهازك.',
+  reqReviewBtn:'الإبلاغ عن خطأ',
   reqReviewSent:'تم إرسال طلبك. سيراجع فريق الدعم القرار خلال ٢٤ ساعة.',
   activityTitle:'نشاط الوكيل الذكي',
   actRiskAssessed:function(n){return 'وكيل المخاطر قيّم انضمام '+n},
@@ -225,17 +240,22 @@ en:{
   welcomeBack:'Welcome Back',welcomeSub:'Sign in to continue',
   nationalIdLabel:'National ID / Iqama Number',nationalIdPH:'1XXXXXXXXX',
   phoneLabel:'Mobile Number',phonePH:'05XXXXXXXX',
-  usernameLabel:'Username',usernamePH:'Enter your username',
+  namePH:'e.g. Mohammed Al-Otaibi',
   errNationalId:'Please enter a valid National ID/Iqama number',
-  errUsername:'Please enter a username',
   sendCode:'Send Verification Code',enterCode:'Enter Verification Code',
   codeSentTo:'Code sent to',verify:'Verify',resend:'Resend Code',
   nafath:'Powered by Nafath',errPhone:'Please enter a valid number',
-  pinLabel:'PIN (4 digits)',pinPH:'••••',errPin:'Please enter a 4-digit PIN',
+  passwordLabel:'Password',passwordPH:'••••••••',
+  errPassword:'Please enter your password',
+  errPasswordFormat:'Password must be at least 8 characters',
+  passwordHint:'At least 8 characters (letters or numbers)',
   loginBtn:'Sign In',loggingIn:'Signing in...',
-  loginError:'Incorrect phone number or PIN',
-  demoAccountsTitle:'Demo accounts to try with colleagues',
-  demoAccountsHint:'Organizer: 0511111111 / 1111\nMember 1: 0522222222 / 2222\nMember 2: 0533333333 / 3333',
+  loginError:'Incorrect phone number or password',
+  noAccountLink:"Don't have an account? Create one",haveAccountLink:'Already have an account? Sign in',
+  signupTitle:'Create Your Account',signupSub:'Enter your details to join JameyaTech',
+  createAccountBtn:'Create Account',
+  phoneTakenError:'This number is already registered, try signing in',
+  signupError:'Could not create account, please try again',
   navCircles:'My Circles',navCreate:'Create',navSettings:'Settings',
   myCircles:'My Circles',noCircles:'No circles yet',
   noCirclesSub:'Tap + to create your first circle',
@@ -345,7 +365,7 @@ en:{
   turnReasonsTitle:'Why this order',
   applyOrderBtn:'Apply this order',
   orderAppliedMsg:'Suggested order applied',
-  subtotalLabel:"This month's contribution",queuePosLabel:'Your position in queue',totalPotLabel:'Total circle pot',
+  queuePosLabel:'Your position in queue',totalPotLabel:'Total circle pot',
   contractTitle:'Digital Agreement',
   contractDesc:'Before starting the circle, review the agreement summary that every member digitally signs via Nafath.',
   contractMembers:'Members',contractAmount:'Monthly Amount',contractOrder:'Payout Order',
@@ -357,7 +377,8 @@ en:{
   trustRiskDesc:"These assessments are private to you as organizer and are never shown to other members. Any member can request human review of a decision.",
   noFlagged:'No members currently flagged',
   aiServiceDown:'Could not reach the AI agent service right now. Please try again shortly.',
-  reqReviewBtn:'Flag an issue / request human review',
+  serverDownError:'Could not connect to the server. Make sure agent_server.py is running.',
+  reqReviewBtn:'Report an issue',
   reqReviewSent:'Your request has been sent. Support will review this decision within 24 hours.',
   activityTitle:'AI Activity',
   actRiskAssessed:function(n){return 'Risk Agent assessed '+n+' joining'},
@@ -395,15 +416,23 @@ function checkRisk(phone){var p=phone.replace(/\s/g,'');for(var i=0;i<RISKS.leng
 // can pick it up next time they sync.
 var DB_KEY='waj_circles',DB_SET='waj_settings',DB_SESSION='waj_session';
 
-function saveSession(s){localStorage.setItem(DB_SESSION,JSON.stringify(s));}
-function loadSession(){try{return JSON.parse(localStorage.getItem(DB_SESSION));}catch(e){return null;}}
-function clearSession(){localStorage.removeItem(DB_SESSION);}
+// Session identity and the circles it can see are stored in sessionStorage,
+// NOT localStorage -- localStorage is shared across every tab/window of the
+// same browser for this origin, so testing multiple accounts as separate
+// tabs of one browser would silently fight over the same "who's logged in"
+// slot (logging into account B in tab 2 would log tab 1 out from under it).
+// sessionStorage is scoped per tab/window instead, while still surviving a
+// reload of that same tab -- exactly what "log into a different demo
+// account per tab" needs.
+function saveSession(s){sessionStorage.setItem(DB_SESSION,JSON.stringify(s));}
+function loadSession(){try{return JSON.parse(sessionStorage.getItem(DB_SESSION));}catch(e){return null;}}
+function clearSession(){sessionStorage.removeItem(DB_SESSION);}
 
 function syncCirclesFromServer(onDone){
   if(!state.session){if(onDone)onDone();return;}
   fetch(AGENT_API+'/api/circles-for/'+state.session.phone)
     .then(function(r){return r.json();})
-    .then(function(list){localStorage.setItem(DB_KEY,JSON.stringify(list||[]));if(onDone)onDone();})
+    .then(function(list){sessionStorage.setItem(DB_KEY,JSON.stringify(list||[]));if(onDone)onDone();})
     .catch(function(){if(onDone)onDone();}); // offline-safe: keep stale local cache rather than crash
 }
 function pushCircleToServer(c){
@@ -429,7 +458,7 @@ function dbInit(){
   var sess=loadSession();
   if(sess){state.session=sess;state.phase='app';}
 }
-function getCircles(){try{return JSON.parse(localStorage.getItem(DB_KEY))||[];}catch(e){return[];}}
+function getCircles(){try{return JSON.parse(sessionStorage.getItem(DB_KEY))||[];}catch(e){return[];}}
 function getCircle(id){var l=getCircles();for(var i=0;i<l.length;i++){if(l[i].id===id)return l[i];}return null;}
 function updateCircle(id,updates){
   var list=getCircles();
@@ -437,15 +466,15 @@ function updateCircle(id,updates){
   for(var i=0;i<list.length;i++){
     if(list[i].id===id){for(var k in updates) list[i][k]=updates[k]; updated=list[i]; break;}
   }
-  localStorage.setItem(DB_KEY,JSON.stringify(list));
+  sessionStorage.setItem(DB_KEY,JSON.stringify(list));
   if(updated)pushCircleToServer(updated);
 }
 function saveCircle(c){
   var list=getCircles();
-  c.id=Date.now();c.currentTurn=0;c.daysLeft=0;c.status='waiting';
+  c.id=Date.now();c.currentTurn=0;c.status='waiting';
   c.organizerPhone=state.session.phone;
   list.push(c);
-  localStorage.setItem(DB_KEY,JSON.stringify(list));
+  sessionStorage.setItem(DB_KEY,JSON.stringify(list));
   pushCircleToServer(c);
 }
 function saveSettings(s){localStorage.setItem(DB_SET,JSON.stringify(s));}
@@ -455,16 +484,16 @@ function myMember(c){var mp=myPhone();for(var i=0;i<c.members.length;i++){if(c.m
 function isInvitation(c){var me=myMember(c);return !isOrganizer(c)&&me&&me.confirmed==='pending';}
 
 var DB_NOTIF='waj_notifications';
-function getNotifications(){try{return JSON.parse(localStorage.getItem(DB_NOTIF))||[];}catch(e){return[];}}
+function getNotifications(){try{return JSON.parse(sessionStorage.getItem(DB_NOTIF))||[];}catch(e){return[];}}
 function addNotification(ar,en){
   var list=getNotifications();
   list.unshift({id:Date.now(),ar:ar,en:en,date:new Date().toISOString(),read:false});
-  localStorage.setItem(DB_NOTIF,JSON.stringify(list));
+  sessionStorage.setItem(DB_NOTIF,JSON.stringify(list));
 }
 function markNotificationsRead(){
   var list=getNotifications();
   list.forEach(function(n){n.read=true});
-  localStorage.setItem(DB_NOTIF,JSON.stringify(list));
+  sessionStorage.setItem(DB_NOTIF,JSON.stringify(list));
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -503,6 +532,19 @@ function computeMyTurnLabel(c){
   if(!me||c.status!=='active')return '—';
   var d=addMonths(c.startDate,me.turn-1);
   return isA()?MONTHS_AR_FULL[d.getMonth()]:MONTHS_EN_FULL[d.getMonth()];
+}
+// Deadline for this cycle's contribution = start of the *next* turn's month
+// (c.currentTurn is 1-indexed, so addMonths(start, currentTurn) lands on the
+// month after the current one). Computed live from real dates every render
+// instead of a stored field, so it's never stale and needs no manual update
+// after paying or on any other action.
+function computeDueDate(c){return addMonths(c.startDate,c.currentTurn);}
+function computeDaysLeft(c){
+  if(c.status!=='active')return 0;
+  var due=computeDueDate(c);due.setHours(0,0,0,0);
+  var today=new Date();today.setHours(0,0,0,0);
+  var days=Math.round((due-today)/86400000);
+  return days>0?days:0;
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -615,13 +657,13 @@ function skeletonHtml(lines){
 // 5d. ACTIVITY TIMELINE — makes the Orchestrator's chained decisions visible
 // ═══════════════════════════════════════════════════════════
 var DB_ACT='waj_activity';
-function getActivityAll(){try{return JSON.parse(localStorage.getItem(DB_ACT))||{};}catch(e){return {};}}
+function getActivityAll(){try{return JSON.parse(sessionStorage.getItem(DB_ACT))||{};}catch(e){return {};}}
 function addActivity(circleId,agentKey,ar,en){
   var all=getActivityAll();
   if(!all[circleId])all[circleId]=[];
   all[circleId].unshift({agent:agentKey,ar:ar,en:en,ts:Date.now()});
   all[circleId]=all[circleId].slice(0,12);
-  localStorage.setItem(DB_ACT,JSON.stringify(all));
+  sessionStorage.setItem(DB_ACT,JSON.stringify(all));
 }
 function renderTimeline(circleId){
   var l=tt(),list=(getActivityAll()[circleId]||[]);
@@ -663,34 +705,76 @@ function scrLogin(){
   $app.innerHTML='<div class="auth">'+logoHtml()+
     '<div style="text-align:'+ta()+';margin-bottom:20px"><h2 class="t2 b9 ct" style="margin-bottom:6px">'+l.welcomeBack+'</h2><p class="tb cm">'+l.welcomeSub+'</p></div>'+
     '<div class="fg"><label class="fl">'+l.phoneLabel+'</label><div class="phr"><div class="phx"><span>🇸🇦</span><span>+966</span></div><input id="lphi" type="tel" inputmode="numeric" dir="ltr" class="fi f1" placeholder="'+l.phonePH+'" maxlength="10" value="'+(state.loginPhone||'')+'" /></div></div>'+
-    '<div class="fg"><label class="fl">'+l.pinLabel+'</label><input id="lpin" type="password" inputmode="numeric" dir="ltr" class="fi" placeholder="'+l.pinPH+'" maxlength="4" /></div>'+
+    '<div class="fg"><label class="fl">'+l.passwordLabel+'</label><input id="lpin" type="password" dir="ltr" class="fi" placeholder="'+l.passwordPH+'" /></div>'+
     '<p id="pe" class="ts cr" style="margin-top:-8px;margin-bottom:8px;display:none;text-align:'+ta()+'"></p>'+
     '<div class="f row g10" style="'+(isA()?'flex-direction:row-reverse;':'')+'background:var(--primary-lt);border-radius:14px;padding:12px 14px;margin-bottom:8px">'+
     icon('lock',17,'cp')+'<p class="tx cm" style="text-align:'+ta()+'">'+l.nafathExplain+'</p></div>'+
-    '<div class="cd" style="background:var(--ai-bg);border:1px dashed var(--ai-border);margin-bottom:8px">'+
-    '<p class="tx b7" style="color:var(--ai);margin-bottom:6px;text-align:'+ta()+'">'+l.demoAccountsTitle+'</p>'+
-    '<p class="tx cm" style="text-align:'+ta()+';line-height:1.9;white-space:pre-line" dir="ltr">'+l.demoAccountsHint+'</p></div>'+
     '<div style="flex:1"></div><div class="fc g12"><button id="bsc" class="bp">'+l.loginBtn+'</button>'+
+    '<button id="btoSignup" class="bg-btn">'+l.noAccountLink+'</button>'+
     '<div class="tc"><span class="trust-badge">'+iconCirc('lock',12)+l.nafath+'</span></div>'+
     '<p class="tx cm tc">'+l.privacyNote+'</p></div></div>';
   on('lphi','input',function(){state.loginPhone=el('lphi').value.replace(/\D/g,'').slice(0,10)});
-  on('lpin','input',function(){state.loginPin=el('lpin').value.replace(/\D/g,'').slice(0,4)});
+  on('lpin','input',function(){state.loginPassword=el('lpin').value});
+  on('btoSignup','click',function(){setState({phase:'signup'})});
   on('bsc','click',function(){
     var p=(el('lphi').value||'').replace(/\D/g,'');
-    var pin=(el('lpin').value||'').replace(/\D/g,'');
+    var pw=el('lpin').value||'';
     if(p.length<9){el('pe').textContent=l.errPhone;el('pe').style.display='block';return;}
-    if(pin.length<4){el('pe').textContent=l.errPin;el('pe').style.display='block';return;}
+    if(!pw){el('pe').textContent=l.errPassword;el('pe').style.display='block';return;}
     el('pe').style.display='none';
     el('bsc').disabled=true;el('bsc').textContent=l.loggingIn;
-    callAgent({phone:p,pin:pin},function(result,err){
+    callAgent({phone:p,password:pw},function(result,err){
       if(err||!result||!result.phone){
         el('bsc').disabled=false;el('bsc').textContent=l.loginBtn;
-        el('pe').textContent=l.loginError;el('pe').style.display='block';return;
+        el('pe').textContent=(err===agentUnreachableMsg())?l.serverDownError:l.loginError;
+        el('pe').style.display='block';return;
       }
       state.session=result;
       saveSession(result);
       syncCirclesFromServer(function(){setState({phase:'app',tab:'circles'})});
     },'/api/login');
+  });
+}
+
+// ── Signup: name / national ID / phone / password ─────────────
+function scrSignup(){
+  var l=tt();
+  $app.innerHTML='<div class="auth">'+logoHtml()+
+    '<div style="text-align:'+ta()+';margin-bottom:20px"><h2 class="t2 b9 ct" style="margin-bottom:6px">'+l.signupTitle+'</h2><p class="tb cm">'+l.signupSub+'</p></div>'+
+    '<div class="fg"><label class="fl">'+l.nameLabel+'</label><input id="suName" type="text" dir="'+(isA()?'rtl':'ltr')+'" class="fi" placeholder="'+l.namePH+'" value="'+(state.signupName||'')+'" /></div>'+
+    '<div class="fg"><label class="fl">'+l.nationalIdLabel+'</label><input id="suNid" type="text" inputmode="numeric" dir="ltr" class="fi" placeholder="'+l.nationalIdPH+'" maxlength="10" value="'+(state.signupNid||'')+'" /></div>'+
+    '<div class="fg"><label class="fl">'+l.phoneLabel+'</label><div class="phr"><div class="phx"><span>🇸🇦</span><span>+966</span></div><input id="suPhone" type="tel" inputmode="numeric" dir="ltr" class="fi f1" placeholder="'+l.phonePH+'" maxlength="10" value="'+(state.signupPhone||'')+'" /></div></div>'+
+    '<div class="fg"><label class="fl">'+l.passwordLabel+'</label><input id="suPw" type="password" dir="ltr" class="fi" placeholder="'+l.passwordPH+'" />'+
+    '<p class="ts cm" style="margin-top:6px">'+l.passwordHint+'</p></div>'+
+    '<p id="se1" class="ts cr" style="margin-top:-8px;margin-bottom:8px;display:none;text-align:'+ta()+'"></p>'+
+    '<div style="flex:1"></div><div class="fc g12"><button id="bsuCreate" class="bp">'+l.createAccountBtn+'</button>'+
+    '<button id="bsuToLogin" class="bg-btn">'+l.haveAccountLink+'</button></div></div>';
+  on('suName','input',function(){state.signupName=el('suName').value});
+  on('suNid','input',function(){state.signupNid=el('suNid').value.replace(/\D/g,'').slice(0,10)});
+  on('suPhone','input',function(){state.signupPhone=el('suPhone').value.replace(/\D/g,'').slice(0,10)});
+  on('bsuToLogin','click',function(){setState({phase:'login'})});
+  on('bsuCreate','click',function(){
+    var name=(el('suName').value||'').trim();
+    var nid=(el('suNid').value||'').replace(/\D/g,'');
+    var p=(el('suPhone').value||'').replace(/\D/g,'');
+    var pw=el('suPw').value||'';
+    if(!name){el('se1').textContent=l.errFillAll;el('se1').style.display='block';return;}
+    if(nid.length<10){el('se1').textContent=l.errNationalId;el('se1').style.display='block';return;}
+    if(p.length<9){el('se1').textContent=l.errPhone;el('se1').style.display='block';return;}
+    if(pw.length<8){el('se1').textContent=l.errPasswordFormat;el('se1').style.display='block';return;}
+    el('se1').style.display='none';
+    el('bsuCreate').disabled=true;el('bsuCreate').textContent=l.loggingIn;
+    callAgent({phone:p,national_id:nid,name:name,password:pw},function(result,err){
+      el('bsuCreate').disabled=false;el('bsuCreate').textContent=l.createAccountBtn;
+      if(err||!result||!result.phone){
+        el('se1').textContent=(err===agentUnreachableMsg())?l.serverDownError:((err&&/registered/i.test(err))?l.phoneTakenError:l.signupError);
+        el('se1').style.display='block';return;
+      }
+      state.session=result;
+      saveSession(result);
+      setState({signupName:'',signupNid:'',signupPhone:''});
+      syncCirclesFromServer(function(){setState({phase:'app',tab:'circles'})});
+    },'/api/register');
   });
 }
 
@@ -701,6 +785,15 @@ function scrCircles(){
     if(isInvitation(c))return false;
     var me=myMember(c);
     return !(me&&me.confirmed==='declined'); // hide circles I declined -- still intact for everyone else
+  });
+  // Active circles first, soonest payment due first; not-yet-started
+  // circles after, ordered by their intended start date.
+  circles.sort(function(a,b){
+    var aWaiting=a.status==='waiting',bWaiting=b.status==='waiting';
+    if(aWaiting!==bWaiting)return aWaiting?1:-1;
+    var aKey=aWaiting?new Date(a.startDate).getTime():computeDueDate(a).getTime();
+    var bKey=bWaiting?new Date(b.startDate).getTime():computeDueDate(b).getTime();
+    return aKey-bKey;
   });
   var h='',ih='';
 
@@ -740,7 +833,7 @@ function scrCircles(){
         '<div class="f row g8" style="flex-wrap:wrap"><span class="bz '+(isOrg?'bz-go':'bz-pr')+'">'+(isOrg?l.roleOrganizer:l.roleMember)+'</span>'+statusBadge+'</div></div>'+
         '<span class="cm txl" style="margin-'+(isA()?'right':'left')+':8px">›</span></div>'+
         statsHtml+
-        (isWaiting?'':'<p class="ts cm" style="text-align:'+ta()+';margin-top:8px;font-weight:600">'+icon('clock',13)+' '+l.daysLeftLabel(c.daysLeft)+'</p>')+
+        (isWaiting?'':'<p class="ts cm" style="text-align:'+ta()+';margin-top:8px;font-weight:600">'+icon('clock',13)+' '+l.daysLeftLabel(computeDaysLeft(c))+'</p>')+
         '</div>';
     });
   }
@@ -784,7 +877,7 @@ function respondInvite(circleId,accept){
   if(!c)return;
   var me=myMember(c);if(!me)return;
   me.confirmed=accept?'confirmed':'declined'; // optimistic local update for instant UI feedback
-  localStorage.setItem(DB_KEY,JSON.stringify(list));
+  sessionStorage.setItem(DB_KEY,JSON.stringify(list));
   updateMyMemberOnServer(circleId,{confirmed:me.confirmed});
   setState({});
 }
@@ -933,7 +1026,7 @@ function scrDetail(){
       '<p class="tm b7 ct">'+fmtDate(c.startDate)+'</p></div></div></div>';
 
     // Stats
-    detail+='<div class="twoc"><div class="cd" style="margin-bottom:0;text-align:center"><p class="tx cm" style="margin-bottom:6px">'+l.nextPayment+'</p><p class="t4 b9 cp">'+c.daysLeft+'</p><p class="tx cm">'+l.daysUnit+'</p></div>'+
+    detail+='<div class="twoc"><div class="cd" style="margin-bottom:0;text-align:center"><p class="tx cm" style="margin-bottom:6px">'+l.nextPayment+'</p><p class="t4 b9 cp">'+computeDaysLeft(c)+'</p><p class="tx cm">'+l.daysUnit+'</p></div>'+
       '<div class="cd" style="margin-bottom:0;text-align:center"><p class="tx cm" style="margin-bottom:6px">'+l.myTurnLabel+'</p><p class="txl b9 cg">'+turnM+'</p><p class="tx cm">'+l.youReceive+': SAR '+pot+'</p></div></div>';
 
     // Current turn
@@ -1117,7 +1210,7 @@ function scrDetail(){
   on('bcancelDelete','click',function(){el('deleteConfirm').style.display='none'});
   on('bconfirmDelete','click',function(){
     var list=getCircles().filter(function(x){return x.id!==c.id});
-    localStorage.setItem(DB_KEY,JSON.stringify(list));
+    sessionStorage.setItem(DB_KEY,JSON.stringify(list));
     deleteCircleFromServer(c.id);
     addNotification(T.ar.circleDeletedNotif(c.ar),T.en.circleDeletedNotif(c.en));
     setState({activeCircleId:null});
@@ -1133,10 +1226,8 @@ function scrPay(c){
     '<h1 style="text-align:'+ta()+'">'+l.payScreenTitle+'</h1></div><div class="body">'+
     '<div class="cd" style="text-align:center"><p class="tx cm" style="margin-bottom:6px">'+l.amountDueLabel+'</p>'+
     '<p class="t3 b9 cp" dir="ltr">'+c.amount+' '+l.sarUnit+'</p></div>'+
-    '<div class="cd"><div class="brk">'+
-    '<div class="brk-row"><span>'+l.subtotalLabel+'</span><span dir="ltr">'+c.amount+' '+l.sarUnit+'</span></div>'+
-    '<div class="brk-row"><span>'+l.queuePosLabel+'</span><span dir="ltr">'+(me?me.turn:'—')+' / '+c.totalTurns+'</span></div>'+
-    '<div class="brk-row"><span>'+l.totalPotLabel+'</span><span dir="ltr">'+pot+' '+l.sarUnit+'</span></div></div></div>'+
+    '<div class="twoc"><div class="cd" style="margin-bottom:0;text-align:center"><p class="tx cm" style="margin-bottom:6px">'+l.queuePosLabel+'</p><p class="tl b8 ct" dir="ltr">'+(me?me.turn:'—')+' / '+c.totalTurns+'</p></div>'+
+    '<div class="cd" style="margin-bottom:0;text-align:center"><p class="tx cm" style="margin-bottom:6px">'+l.totalPotLabel+'</p><p class="tl b8 ct" dir="ltr">'+pot+' '+l.sarUnit+'</p></div></div>'+
     '<div class="cd"><p class="st">'+l.paymentMethodLabel+'</p>'+
     '<div class="ltg"><button id="pmMada" class="ltb'+(_payMethod==='mada'?' on':'')+'">'+icon('card',15)+' '+l.methodMada+'</button>'+
     '<button id="pmApple" class="ltb'+(_payMethod==='apple'?' on':'')+'">'+icon('card',15)+' '+l.methodApplePay+'</button></div></div>'+
@@ -1170,7 +1261,7 @@ function payNow(circleId){
   if(!c)return;
   var me=myMember(c);if(!me)return;
   me.paid=true;
-  localStorage.setItem(DB_KEY,JSON.stringify(list));
+  sessionStorage.setItem(DB_KEY,JSON.stringify(list));
   updateMyMemberOnServer(circleId,{paid:true});
 }
 
@@ -1192,7 +1283,7 @@ function scrContract(c){
     '</div></div>';
   on('bbkc','click',function(){setState({contractView:'off'})});
   on('bsign','click',function(){
-    updateCircle(c.id,{status:'active',currentTurn:1,daysLeft:30});
+    updateCircle(c.id,{status:'active',currentTurn:1});
     setState({contractView:'signed'});
   });
 }
@@ -1378,7 +1469,12 @@ function scrSettings(){
     '<div class="cd"><div class="srow"><div class="f row g10 ac" style="'+(isA()?'flex-direction:row-reverse;':'')+'"><div class="srow-ic">'+icon('card',16)+'</div><p class="tm b6 ct">'+l.notifPayment+'</p></div><button class="tgl'+(s.notifPayment?' on':'')+'" id="tp"></button></div>'+
     '<div class="srow"><div class="f row g10 ac" style="'+(isA()?'flex-direction:row-reverse;':'')+'"><div class="srow-ic">'+icon('users',16)+'</div><p class="tm b6 ct">'+l.notifGroup+'</p></div><button class="tgl'+(s.notifGroup?' on':'')+'" id="tg"></button></div></div>'+
     '<p class="slbl" style="text-align:'+ta()+'">'+l.profileSection+'</p>'+
-    '<div class="cd"><div class="srow"><div class="f row g10 ac" style="'+(isA()?'flex-direction:row-reverse;':'')+'"><div class="srow-ic">'+icon('user',16)+'</div><p class="tm b6 ct">'+l.nameLabel+'</p></div><p class="tb cm b6">'+(state.session?(isA()?state.session.name_ar:state.session.name_en):l.nameVal)+'</p></div>'+
+    '<div class="cd"><div class="srow"><div class="f row g10 ac" style="'+(isA()?'flex-direction:row-reverse;':'')+'"><div class="srow-ic">'+icon('user',16)+'</div><p class="tm b6 ct">'+l.nameLabel+'</p></div>'+
+    '<div class="f row g8 ac" style="'+(isA()?'flex-direction:row-reverse;':'')+'"><p id="nameDisplay" class="tb cm b6">'+(state.session?(isA()?state.session.name_ar:state.session.name_en):l.nameVal)+'</p><button id="btglName" class="bg-btn" style="width:auto">'+l.editPriceBtn+'</button></div></div>'+
+    '<div id="nameForm" style="display:none;padding:0 0 16px;direction:'+(isA()?'rtl':'ltr')+'">'+
+    '<div class="fg" style="margin-bottom:8px"><input id="npName" type="text" class="fi" dir="'+(isA()?'rtl':'ltr')+'" value="'+(state.session?(isA()?state.session.name_ar:state.session.name_en):'')+'" /></div>'+
+    '<div class="f row g10"><button id="bsaveName" class="bp" style="flex:1">'+l.savePriceBtn+'</button>'+
+    '<button id="bcancelName" class="bg-btn" style="flex:1">'+l.cancelBtn+'</button></div></div>'+
     '<div class="srow"><div class="f row g10 ac" style="'+(isA()?'flex-direction:row-reverse;':'')+'"><div class="srow-ic">'+icon('phone',16)+'</div><p class="tm b6 ct">'+l.phoneLabel2+'</p></div><p class="tb cm b6" dir="ltr">'+(state.session?state.session.phone:'—')+'</p></div>'+
     '<div class="srow"><div class="f row g10 ac" style="'+(isA()?'flex-direction:row-reverse;':'')+'"><div class="srow-ic">'+icon('info',16)+'</div><p class="tm b6 ct">'+l.versionLabel+'</p></div><p class="tb cm">1.0.0</p></div></div>'+
     '<button id="blo" class="bd f row g8 ac jc" style="'+(isA()?'flex-direction:row-reverse;':'')+'margin-top:4px">'+icon('logout',16)+l.logoutBtn+'</button></div></div>';
@@ -1388,6 +1484,21 @@ function scrSettings(){
   qa('.szb').forEach(function(btn){btn.addEventListener('click',function(){applySet(Object.assign({},state.settings,{textSize:btn.dataset.sz}))})});
   on('tp','click',function(){applySet(Object.assign({},state.settings,{notifPayment:!state.settings.notifPayment}))});
   on('tg','click',function(){applySet(Object.assign({},state.settings,{notifGroup:!state.settings.notifGroup}))});
+  on('btglName','click',function(){
+    var f=el('nameForm');
+    f.style.display=f.style.display==='none'?'block':'none';
+    if(f.style.display==='block'){el('npName').focus();}
+  });
+  on('bcancelName','click',function(){el('nameForm').style.display='none'});
+  on('bsaveName','click',function(){
+    var val=(el('npName').value||'').trim();
+    if(!val||!state.session)return;
+    state.session.name_ar=val;
+    state.session.name_en=val;
+    saveSession(state.session);
+    el('nameForm').style.display='none';
+    setState({});
+  });
   on('blo','click',function(){
     clearSession();
     state.session=null;
@@ -1422,6 +1533,7 @@ function render(){
   applyScale();
   if(state.phase==='language')scrLanguage();
   else if(state.phase==='login')scrLogin();
+  else if(state.phase==='signup')scrSignup();
   else if(state.phase==='app'){
     if(state.tab==='circles'){if(state.notifView)scrNotifications();else if(state.activeCircleId!==null)scrDetail();else scrCircles();}
     else if(state.tab==='create'){if(state.createStep===2)scrCreate2();else scrCreate1();}
